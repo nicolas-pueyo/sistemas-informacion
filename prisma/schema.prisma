@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Ciudad {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Usuario Usuario[] // Assuming one city has multiple users
+}
+
+model Usuario {
+  id        Int         @id @default(autoincrement())
+  name      String
+  email     String      @unique
+  ciudadId  Int
+  Ciudad    Ciudad      @relation(fields: [ciudadId], references: [id])
+  Discoteca Discoteca[] // Assuming a user can own multiple discos
+  Puntua    Puntua[] // User can rate multiple events
+}
+
+model Discoteca {
+  id        Int      @id @default(autoincrement())
+  name      String
+  usuarioId Int
+  Usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  Evento    Evento[] // Discoteca has multiple events
+  Posee     Posee[]
+}
+
+model Evento {
+  id          Int           @id @default(autoincrement())
+  name        String
+  discotecaId Int
+  Discoteca   Discoteca     @relation(fields: [discotecaId], references: [id])
+  TipoEntrada TipoEntrada[] // Event has multiple ticket types
+  Puntua      Puntua[] // Events can be rated
+  Posee       Posee[]
+}
+
+model TipoEntrada {
+  id          Int    @id @default(autoincrement())
+  description String
+  precio      Float
+  eventoId    Int
+  Evento      Evento @relation(fields: [eventoId], references: [id])
+}
+
+model Puntua {
+  id        Int     @id @default(autoincrement())
+  rating    Int
+  usuarioId Int
+  eventoId  Int
+  Usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  Evento    Evento  @relation(fields: [eventoId], references: [id])
+}
+
+model Posee {
+  id          Int       @id @default(autoincrement())
+  discotecaId Int
+  eventoId    Int
+  Discoteca   Discoteca @relation(fields: [discotecaId], references: [id])
+  Evento      Evento    @relation(fields: [eventoId], references: [id])
+}
