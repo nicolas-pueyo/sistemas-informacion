@@ -1,23 +1,30 @@
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useState } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
   const [discotecas, setDiscotecas] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [ciudades, setCiudades] = useState([]);
 
   // Fetch discotecas from the API when the component loads
-  useEffect(() => {
-    const fetchDiscotecas = async () => {
-      try {
-        const res = await fetch('/api/discotecas'); // Fetch from the API route
-        const data = await res.json();
-        setDiscotecas(data); // Set the data to the state
-      } catch (error) {
-        console.error('Error fetching discotecas:', error);
-      }
-    };
+  const fetchDiscotecas = async () => {
+    const res = await fetch('/api/discotecas');
+    const data = await res.json();
+    setDiscotecas(data);
+  };
 
-    fetchDiscotecas();
-  }, []);
+  const fetchUsuarios = async () => {
+    const res = await fetch('/api/usuarios');
+    const data = await res.json();
+    setUsuarios(data);
+  };
+
+  const fetchCiudades = async () => {
+    const res = await fetch('/api/ciudades');
+    const data = await res.json();
+    setCiudades(data);
+  };
 
   return (
     <>
@@ -29,16 +36,24 @@ export default function Home() {
       </Head>
 
       <div id="home">
-        <div id="left">
-          <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
-        </div>
+      <div id="left">
+                <Link href="/" className="home-icon">
+                <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
+                </Link>
+              
+            </div>
         <div id="center">
           <h1 id="main-title">NÉBULA</h1>
         </div>
         <div id="right">
-          <img id="session" className="home-icon" src="/img/session.png" alt="Session" />
-          <img id="ubi" className="home-icon" src="/img/ubi.png" alt="Location" />
+          <Link href="/account" className="home-icon">
+            <img id="session" className="session" src="/img/session.png" alt="Account" />
+          </Link>
+          <Link href="/ubi" className="home-icon">
+            <img id="ubi" className="ubi" src="/img/ubi.png" alt="Location" />
+          </Link>
         </div>
+
       </div>
 
       <h2 id="subtitulo">Let the show begin</h2>
@@ -68,29 +83,57 @@ export default function Home() {
           y aún así venir por más.
         </p>
 
-        {/* Display the list of discotecas */}
-        <h3>List of Discotecas</h3>
-        {discotecas.length === 0 ? (
-          <p>No discotecas found.</p>
-        ) : (
-          <ul>
-            {discotecas.map((discoteca) => (
-              <li key={discoteca.id}>
-                <strong>{discoteca.name}</strong> owned by {discoteca.Usuario.name}.
-                <p>Events:</p>
+        <div className="container">
+          <div className="button-container">
+            <div className="fetch-section">
+              <button onClick={fetchDiscotecas}>Fetch Discotecas</button>
+              {discotecas.length > 0 ? (
                 <ul>
-                  {discoteca.Evento.length === 0 ? (
-                    <li>No events available</li>
-                  ) : (
-                    discoteca.Evento.map((evento) => (
-                      <li key={evento.id}>{evento.name}</li>
-                    ))
-                  )}
+                  {discotecas.map(discoteca => (
+                    <li key={discoteca.id}>
+                      <strong>{discoteca.name}</strong>
+                      <h3>Subtitle: {discoteca.id}</h3>
+                    </li>
+                  ))}
                 </ul>
-              </li>
-            ))}
-          </ul>
-        )}
+              ) : (
+                <p>No discotecas found.</p>
+              )}
+            </div>
+            
+            <div className="fetch-section">
+              <button onClick={fetchUsuarios}>Fetch Usuarios</button>
+              {usuarios.length > 0 ? (
+                <ul>
+                  {usuarios.map(usuario => (
+                    <li key={usuario.id}>
+                      <strong>{usuario.name}</strong> - {usuario.email}
+                      <h3>Subtitle: {usuario.id}</h3>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No usuarios found.</p>
+              )}
+            </div>
+            
+            <div className="fetch-section">
+              <button onClick={fetchCiudades}>Fetch Ciudades</button>
+              {ciudades.length > 0 ? (
+                <ul>
+                  {ciudades.map(ciudad => (
+                    <li key={ciudad.id}>
+                      <strong>{ciudad.name}</strong>
+                      <h3>Subtitle: {ciudad.id}</h3>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No ciudades found.</p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
     </>

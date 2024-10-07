@@ -8,7 +8,8 @@ body, html {
     background-attachment: fixed;
     margin:0;
     font-family: Arial, sans-serif;
-    background-repeat:no-repeat;    
+    background-repeat:no-repeat;  
+    padding-top: 15vh;  
 }
 
 #pres-logo {
@@ -51,6 +52,10 @@ body, html {
     border-bottom: 2px solid;
     border-color:black;
     justify-content: space-between;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    z-index: 1000;
 }
 
 #left {
@@ -104,6 +109,36 @@ h2 {
     text-justify:inter-word;
 }
 
+/* For buttons and discotecas, provisional*/
+h3 {
+    color: white; 
+}
+
+.container strong {
+    color: white; 
+}
+.button-container {
+    display: flex; /* Enable flexbox layout */
+    justify-content: space-between; /* Distribute buttons evenly */
+    margin-top: 20px; /* Add some space above the buttons */
+    width: 100%; /* Full width of the parent container */
+}
+
+.button-container button {
+    flex: 1; /* Allow buttons to grow equally */
+    margin: 0 10px; /* Add margin between buttons */
+    padding: 10px; /* Add padding for better click area */
+    color: white; /* Text color */
+    background-color: black; /* Background color */
+    border: 1px solid white; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor on hover */
+}
+
+.button-container button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Change background on hover */
+}
+
 @media only screen and (max-width:425px) {
     #pres-logo {
         height: 60px;
@@ -114,3 +149,4 @@ h2 {
     }
     
 }
+
