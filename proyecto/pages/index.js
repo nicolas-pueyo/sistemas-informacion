@@ -9,9 +9,15 @@ export default function Home() {
 
   // Fetch discotecas from the API when the component loads
   const fetchDiscotecas = async () => {
-    const res = await fetch('/api/discotecas');
-    const data = await res.json();
-    setDiscotecas(data);
+    try {
+      const res = await fetch('/api/discotecas');
+      const text = await res.text();
+      console.log('Raw response:', text);  // Imprime la respuesta cruda
+      const data = JSON.parse(text);
+      setDiscotecas(data);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+    }
   };
 
   const fetchUsuarios = async () => {

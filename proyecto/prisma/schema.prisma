@@ -10,7 +10,7 @@ datasource db {
 model Ciudad {
   id      Int       @id @default(autoincrement())
   name    String
-  Usuario Usuario[] // Assuming one city has multiple users
+  Usuario Usuario[]
 }
 
 model Usuario {
@@ -18,9 +18,9 @@ model Usuario {
   name      String
   email     String      @unique
   ciudadId  Int
+  Discoteca Discoteca[]
+  Puntua    Puntua[]
   Ciudad    Ciudad      @relation(fields: [ciudadId], references: [id])
-  Discoteca Discoteca[] // Assuming a user can own multiple discos
-  Puntua    Puntua[] // User can rate multiple events
 }
 
 model Discoteca {
@@ -28,7 +28,7 @@ model Discoteca {
   name      String
   usuarioId Int
   Usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-  Evento    Evento[] // Discoteca has multiple events
+  Evento    Evento[]
   Posee     Posee[]
 }
 
@@ -37,9 +37,9 @@ model Evento {
   name        String
   discotecaId Int
   Discoteca   Discoteca     @relation(fields: [discotecaId], references: [id])
-  TipoEntrada TipoEntrada[] // Event has multiple ticket types
-  Puntua      Puntua[] // Events can be rated
   Posee       Posee[]
+  Puntua      Puntua[]
+  TipoEntrada TipoEntrada[]
 }
 
 model TipoEntrada {
@@ -55,8 +55,8 @@ model Puntua {
   rating    Int
   usuarioId Int
   eventoId  Int
-  Usuario   Usuario @relation(fields: [usuarioId], references: [id])
   Evento    Evento  @relation(fields: [eventoId], references: [id])
+  Usuario   Usuario @relation(fields: [usuarioId], references: [id])
 }
 
 model Posee {
@@ -65,4 +65,94 @@ model Posee {
   eventoId    Int
   Discoteca   Discoteca @relation(fields: [discotecaId], references: [id])
   Evento      Evento    @relation(fields: [eventoId], references: [id])
+}
+
+model ciudad {
+  nombre                             String      @id @db.VarChar(100)
+  discoteca_discoteca_ciudadTociudad discoteca[] @relation("discoteca_ciudadTociudad")
+  usuario_usuario_ciudadTociudad     usuario[]   @relation("usuario_ciudadTociudad")
+}
+
+model discoteca {
+  nombre                                    String        @db.VarChar(100)
+  ciudad                                    String        @db.VarChar(100)
+  gestor                                    String?       @db.VarChar(100)
+  calificacion                              Decimal?      @db.Decimal(10, 2)
+  n_rese_as                                 Int?          @map("n_reseñas")
+  aforo                                     Int?
+  ciudad_discoteca_ciudadTociudad           ciudad        @relation("discoteca_ciudadTociudad", fields: [ciudad], references: [nombre], onDelete: NoAction, onUpdate: NoAction)
+  gestor_local                              gestor_local? @relation(fields: [gestor], references: [nombre_usuario], onDelete: NoAction, onUpdate: NoAction)
+  evento_evento_discoteca_ciudadTodiscoteca evento[]      @relation("evento_discoteca_ciudadTodiscoteca")
+  puntua_puntua_discoteca_ciudadTodiscoteca puntua[]      @relation("puntua_discoteca_ciudadTodiscoteca")
+
+  @@id([nombre, ciudad])
+}
+
+model evento {
+  nombre                                                        String        @db.VarChar(100)
+  discoteca                                                     String        @db.VarChar(100)
+  ciudad                                                        String        @db.VarChar(100)
+  fecha                                                         DateTime      @db.Date
+  n_existencias                                                 Int?
+  marca                                                         String?       @db.VarChar(100)
+  discoteca_evento_discoteca_ciudadTodiscoteca                  discoteca     @relation("evento_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: NoAction, onUpdate: NoAction)
+  tipoentrada_tipoentrada_evento_discoteca_ciudad_fechaToevento tipoentrada[] @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento")
+
+  @@id([nombre, discoteca, ciudad, fecha])
+}
+
+model gestor_local {
+  nombre_usuario String      @id @db.VarChar(100)
+  correo         String?     @db.VarChar(100)
+  contrase_a     String?     @map("contraseña") @db.VarChar(100)
+  discoteca      discoteca[]
+}
+
+model posee {
+  entrada           String      @db.VarChar(100)
+  evento            String      @db.VarChar(100)
+  discoteca         String      @db.VarChar(100)
+  ciudad            String      @db.VarChar(100)
+  fecha             DateTime    @db.Date
+  nombre_usuario    String      @db.VarChar(100)
+  seguro_devolucion Boolean?
+  tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
+  usuario           usuario     @relation(fields: [nombre_usuario], references: [nombre_usuario], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([entrada, evento, discoteca, ciudad, fecha, nombre_usuario])
+}
+
+model puntua {
+  discoteca                                    String    @db.VarChar(100)
+  ciudad                                       String    @db.VarChar(100)
+  nombre_usuario                               String    @db.VarChar(100)
+  calificacion                                 Decimal?  @db.Decimal(10, 2)
+  discoteca_puntua_discoteca_ciudadTodiscoteca discoteca @relation("puntua_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: NoAction, onUpdate: NoAction)
+  usuario                                      usuario   @relation(fields: [nombre_usuario], references: [nombre_usuario], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([discoteca, ciudad, nombre_usuario])
+}
+
+model tipoentrada {
+  nombre                                                   String   @db.VarChar(100)
+  evento                                                   String   @db.VarChar(100)
+  discoteca                                                String   @db.VarChar(100)
+  ciudad                                                   String   @db.VarChar(100)
+  fecha                                                    DateTime @db.Date
+  n_existencias                                            Int?
+  precio                                                   Decimal? @db.Decimal(10, 2)
+  posee                                                    posee[]
+  evento_tipoentrada_evento_discoteca_ciudad_fechaToevento evento   @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento", fields: [evento, discoteca, ciudad, fecha], references: [nombre, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([nombre, evento, discoteca, ciudad, fecha])
+}
+
+model usuario {
+  nombre_usuario                String   @id @db.VarChar(100)
+  ciudad                        String?  @db.VarChar(100)
+  contrase_a                    String?  @map("contraseña") @db.VarChar(100)
+  correo                        String?  @db.VarChar(100)
+  posee                         posee[]
+  puntua                        puntua[]
+  ciudad_usuario_ciudadTociudad ciudad?  @relation("usuario_ciudadTociudad", fields: [ciudad], references: [nombre], onDelete: NoAction, onUpdate: NoAction)
 }
