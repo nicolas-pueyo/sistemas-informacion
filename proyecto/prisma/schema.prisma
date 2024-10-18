@@ -7,66 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Ciudad {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Usuario Usuario[]
-}
-
-model Usuario {
-  id        Int         @id @default(autoincrement())
-  name      String
-  email     String      @unique
-  ciudadId  Int
-  Discoteca Discoteca[]
-  Puntua    Puntua[]
-  Ciudad    Ciudad      @relation(fields: [ciudadId], references: [id])
-}
-
-model Discoteca {
-  id        Int      @id @default(autoincrement())
-  name      String
-  usuarioId Int
-  Usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-  Evento    Evento[]
-  Posee     Posee[]
-}
-
-model Evento {
-  id          Int           @id @default(autoincrement())
-  name        String
-  discotecaId Int
-  Discoteca   Discoteca     @relation(fields: [discotecaId], references: [id])
-  Posee       Posee[]
-  Puntua      Puntua[]
-  TipoEntrada TipoEntrada[]
-}
-
-model TipoEntrada {
-  id          Int    @id @default(autoincrement())
-  description String
-  precio      Float
-  eventoId    Int
-  Evento      Evento @relation(fields: [eventoId], references: [id])
-}
-
-model Puntua {
-  id        Int     @id @default(autoincrement())
-  rating    Int
-  usuarioId Int
-  eventoId  Int
-  Evento    Evento  @relation(fields: [eventoId], references: [id])
-  Usuario   Usuario @relation(fields: [usuarioId], references: [id])
-}
-
-model Posee {
-  id          Int       @id @default(autoincrement())
-  discotecaId Int
-  eventoId    Int
-  Discoteca   Discoteca @relation(fields: [discotecaId], references: [id])
-  Evento      Evento    @relation(fields: [eventoId], references: [id])
-}
-
 model ciudad {
   nombre                             String      @id @db.VarChar(100)
   discoteca_discoteca_ciudadTociudad discoteca[] @relation("discoteca_ciudadTociudad")
@@ -78,7 +18,7 @@ model discoteca {
   ciudad                                    String        @db.VarChar(100)
   gestor                                    String?       @db.VarChar(100)
   calificacion                              Decimal?      @db.Decimal(10, 2)
-  n_rese_as                                 Int?          @map("n_reseñas")
+  n_reviews                                 Int?
   aforo                                     Int?
   ciudad_discoteca_ciudadTociudad           ciudad        @relation("discoteca_ciudadTociudad", fields: [ciudad], references: [nombre], onDelete: NoAction, onUpdate: NoAction)
   gestor_local                              gestor_local? @relation(fields: [gestor], references: [nombre_usuario], onDelete: NoAction, onUpdate: NoAction)
@@ -104,7 +44,7 @@ model evento {
 model gestor_local {
   nombre_usuario String      @id @db.VarChar(100)
   correo         String?     @db.VarChar(100)
-  contrase_a     String?     @map("contraseña") @db.VarChar(100)
+  password       String?     @db.VarChar(100)
   discoteca      discoteca[]
 }
 
@@ -150,7 +90,7 @@ model tipoentrada {
 model usuario {
   nombre_usuario                String   @id @db.VarChar(100)
   ciudad                        String?  @db.VarChar(100)
-  contrase_a                    String?  @map("contraseña") @db.VarChar(100)
+  password                      String?  @db.VarChar(100)
   correo                        String?  @db.VarChar(100)
   posee                         posee[]
   puntua                        puntua[]

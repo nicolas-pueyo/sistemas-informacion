@@ -43,6 +43,20 @@ body, html {
     height: 15%;
 }
 
+#middle {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 45%;
+    height: 15%;
+}
+
+#banner_image {
+    margin-left:auto;
+    height:120px;
+    width:120px;
+}
+
 #home {
     background-color:black;
     height:15vh;
