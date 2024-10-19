@@ -6,15 +6,18 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    try {
-      // Obtener todas las discotecas sin filtros
-      const discotecas = await prisma.discoteca.findMany();
-      res.status(200).json(discotecas);
-    } catch (error) {
-      console.error('Error al obtener discotecas:', error);
-      res.status(500).json({ error: 'Error al obtener las discotecas', detalle: error.message });
-    }
+    const { ciudad } = req.query; // Obtener el parámetro de ciudad desde la query string
+
+    // Si se proporciona una ciudad, filtrar las discotecas por la ciudad
+    const discotecas = await prisma.discoteca.findMany({
+      where: {
+        ciudad: ciudad, // Filtrar por ciudad
+      },
+    });
+
+    return res.status(200).json(discotecas);
   } else {
-    res.status(405).json({ message: 'Método no permitido' });
+    console.log('Método no permitido');
+    return;
   }
 }
