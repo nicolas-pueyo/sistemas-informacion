@@ -2,10 +2,32 @@
 //TODO
 //ahora mismo nadie va a home, hayq ue hacer que cuandologges vayas aquo.!!!!!
 
-import Link from 'next/link';
+import Link from 'next/link'; // no tiene, tendrá eventualmente cuando añadamos discos
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
+import NavBar from '../components/NavBar';
+import { getSession } from 'next-auth/react';
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if(!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  }
+}
+
+
+
 
 export default function Home() {
   const [discotecas, setDiscotecas] = useState([]);
@@ -38,26 +60,7 @@ export default function Home() {
         <title>Nébula</title>
       </Head>
 
-      <div id="home">
-        <div id="left">
-                <Link href="/" className="home-icon">
-                <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
-                </Link>
-              
-        </div>
-        <div id="center">
-          <h1 id="main-title">NÉBULA</h1>
-        </div>
-        <div id="right">
-          <Link href="/account" className="home-icon">
-            <img id="session" className="session" src="/img/session.png" alt="Account" />
-          </Link>
-          <Link href="/ubi" className="home-icon">
-            <img id="ubi" className="ubi" src="/img/ubi.png" alt="Location" />
-          </Link>
-        </div>
-
-      </div>
+      <NavBar/>
 
       <h2 id="subtitulo">Let the show begin</h2>
 

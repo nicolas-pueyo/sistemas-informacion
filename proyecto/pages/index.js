@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import NavBar from '../components/NavBar';
 
 
 const Inicio = () => {
@@ -14,25 +15,16 @@ const Inicio = () => {
                 <title>Nébula - Inicio</title>
             </Head>
 
-            <div id="home">
-                <div id="left">
-                    <Link href="/" className="home-icon">
-                        <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
-                    </Link>
-                </div>
-                <div id="center">
-                    <h1 id="main-title">NÉBULA</h1>
-                </div>
-                <div id="middle">
-                    <img id="banner-image" src="/img/banner_disco.jpg" alt="Banner" />
-                </div>
-                <div id="right">
-                </div>
-            </div>
+            <NavBar/>
 
             <div id="body">
-            <button className="login" role="button">Iniciar sesión</button>
-            <button className="register" role="button">Registrarse</button>
+                <Link href="/auth/signin">
+                    <button className="login" role="button">Iniciar sesión</button>
+                </Link>
+                <Link href="/auth/signup">
+                    <button className="register" role="button">Registrarse</button>
+                </Link>
+            
             </div>
 
 

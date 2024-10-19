@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import NavBar from '../../components/NavBar';
 
 export default function ErrorPage() {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function ErrorPage() {
   }
 
   return (
+    <>
+    <NavBar/>
     <div style={{ textAlign: 'center', padding: '50px' }}>
       <h1>Authentication Error</h1>
       <p>{errorMessage}</p>
@@ -20,5 +23,6 @@ export default function ErrorPage() {
         <a>Go back to Sign In</a>
       </Link>
     </div>
+    </>
   );
 }

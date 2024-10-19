@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import NavBar from '../../components/NavBar';
+
 
 export default function Signup() {
   const [correo, setCorreo] = useState('');
@@ -47,6 +50,8 @@ export default function Signup() {
   };
 
   return (
+    <>
+    <NavBar/>
     <div style={{ textAlign: 'center', padding: '50px' }}>
       <h1>Register</h1>
       <form onSubmit={handleSignup}>
@@ -95,6 +100,12 @@ export default function Signup() {
           {isSubmitting ? 'Enviando...' : 'Registrarse'}
         </button>
       </form>
+      <div style={{ marginTop: '10px' }}>
+          <Link href="/auth/signin">
+            <button className="redirect" role="button">¿Ya tienes cuenta? Inicia sesión</button>
+          </Link>
+        </div>
     </div>
+  </>
   );
 }
