@@ -1,0 +1,55 @@
+ciudad:
+    nombre
+
+discoteca:
+    nombre
+    ciudad
+    gestor
+    calificacion    // Media de atributo calificacion en las entidades puntua (trigger)
+    n_reviews       // En base a nº de entidades puntua en la discoteca (trigger)
+    aforo
+
+evento:
+    nombre
+    discoteca
+    ciudad
+    fecha
+    n_existencias   // En base a suma de n_existencias de todos sus tiposEntradad (trigger)
+    marca
+
+gestor_local:
+    nombre_usuario
+    correo
+    password
+    discoteca
+
+posee:
+    entrada
+    evento
+    discoteca
+    ciudad
+    fecha
+    nombre_usuario
+    seguro_devolucion
+
+puntua:
+    discoteca
+    ciudad
+    nombre_usuario
+    calificacion
+
+tipoEntrada:
+    nombre
+    evento
+    discoteca
+    ciudad
+    fecha
+    n_existencias // En base a nº apariciones maximas - ya compradas (entidad posee) (trigger)
+    precio
+    n_max_entradas
+
+usuario:
+    nombre_usuario
+    ciudad
+    password
+    correo
