@@ -1,8 +1,7 @@
-// pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';  // To hash and compare passwords
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -13,53 +12,67 @@ export default NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        username: { label: "Username", type: "text" },  // Add username field
+        city: { label: "City", type: "text" }            // Add city field
       },
       async authorize(credentials) {
-        // 1. Fetch user from the database
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
+        const { email, password, username, city, isSignup } = credentials;
 
-        // 2. Check if the user exists and password is valid
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          // Password is correct
-          return { id: user.id, email: user.email };  // Valid user
+        if (isSignup) {
+          const existingUser = await prisma.usuario.findUnique({
+            where: { correo: email },
+          });
+
+          if (existingUser) {
+            throw new Error("User already exists");
+          }
+
+          // Hash password and create new user with additional fields
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const newUser = await prisma.usuario.create({
+            data: {
+              correo: email,
+              password: hashedPassword,
+              nombre_usuario: username,  // Save the username
+              ciudad: city                // Save the city
+            },
+          });
+
+          return { id: newUser.id, email: newUser.correo };
         }
 
-        // 3. If no user or password is incorrect, return null (auth fails)
-        return null;
-      }
-    })
-  ],
+        // Handle login
+        const user = await prisma.usuario.findUnique({
+          where: { correo: email },
+        });
 
-  // Enable JWT session management
+        if (user && bcrypt.compareSync(password, user.password)) {
+          return { id: user.id, email: user.correo };
+        }
+
+        return null;
+      },
+    }),
+  ],
   session: {
     jwt: true,
   },
-
-  // Define how JWT is created
   jwt: {
-    secret: process.env.JWT_SECRET,  // Store this in your .env file
+    secret: process.env.JWT_SECRET,
   },
-
-  // Optional: Customize the login/logout redirect behavior
   pages: {
-    signIn: '/auth/signin',  // Custom login page
+    signIn: '/auth/signin',
     signOut: '/auth/signout',
     error: '/auth/error',
   },
-
-  // Callbacks to handle user session
   callbacks: {
     async jwt(token, user) {
-      // If user is provided (i.e., on initial login), add ID to the token
       if (user) {
         token.id = user.id;
       }
       return token;
     },
     async session(session, token) {
-      // Attach the user ID from token to session
       session.user.id = token.id;
       return session;
     }
