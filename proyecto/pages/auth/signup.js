@@ -16,13 +16,19 @@ export default function Signup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    async function fetchCities() {
+  async function fetchCities() {
+    try {
       const res = await fetch('/api/ciudades');
       const data = await res.json();
-      setCities(data);
+      setCities(Array.isArray(data) ? data : []);  // Ensure cities is always an array
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+      setCities([]);  // Set cities as an empty array in case of an error
     }
-    fetchCities();
-  }, []);
+  }
+  fetchCities();
+}, []);
+
 
 
   const handleSignup = async (e) => {
@@ -86,7 +92,7 @@ export default function Signup() {
             />
           </div>
 
-          <select value={ciudad} onChange={(e) => setCities(e.target.value)} required>
+          <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
             <option value="" disabled>Select city</option>
             {cities.map((city) => (
               <option key={city.nombre} value={city.nombre}>

@@ -37,17 +37,16 @@ export default NextAuth({
               ciudad: city                // Save the city
             },
           });
-
-          return { id: newUser.id, email: newUser.correo };
+          return { id: newUser.correo, email: newUser.correo };
         }
 
         // Handle login
         const user = await prisma.usuario.findUnique({
           where: { correo: email },
         });
-
         if (user && bcrypt.compareSync(password, user.password)) {
-          return { id: user.id, email: user.correo };
+          console.log("User during login:", user);
+          return { user:user };
         }
 
         return null;
@@ -56,6 +55,8 @@ export default NextAuth({
   ],
   session: {
     jwt: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 dias
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
     secret: process.env.JWT_SECRET,
@@ -68,13 +69,18 @@ export default NextAuth({
   callbacks: {
     async jwt(token, user) {
       if (user) {
-        token.id = user.id;
+        token.id = user.user.correo; // Access nested 'user' object correctly
       }
       return token;
     },
     async session(session, token) {
-      session.user.id = token.id;
+      if (token.id) {
+        session.user.id = token.id;
+      } else {
+        session.user.id = token.email;  // Use email as a fallback if id is missing
+      }
       return session;
     }
   }
+  
 });
