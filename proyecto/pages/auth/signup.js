@@ -34,7 +34,7 @@ export default function Signup() {
 
     try {
       // Send a request to the signup API route
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
