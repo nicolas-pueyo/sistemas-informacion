@@ -7,12 +7,13 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
 import NavBar from '../components/NavBar';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
+  console.log('Server-side session:', session); // Log session here to check if it's available
 
-  if(!session) {
+  if (!session) {
     return {
       redirect: {
         destination: '/',
@@ -23,58 +24,65 @@ export async function getServerSideProps(context) {
 
   return {
     props: { session },
-  }
+  };
 }
 
 
 
-
-export default function Home({ session }) {
+export default function Home({  }) {
+  const { data: clientSession, status } = useSession();
+  const session = clientSession; // Prefer client-side session if available, fallback to server-side session
+  console.log('Client-side session:', session); // This should now log the correct session both client-side and server-side
   const [discotecas, setDiscotecas] = useState([]);
   const [city, setCity] = useState(null); // City of the logged-in user
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loadingCity, setLoadingCity] = useState(true); // Loading state for city fetch
+  const [loadingDiscotecas, setLoadingDiscotecas] = useState(false); // Loading state for discotecas
 
   // Fetch user's city from the API
   const fetchUserCity = async (email) => {
     try {
-      console.log(`Fetching city for user email: ${email}`);  // Log email for debugging
+      console.log(`Fetching city for user email: ${email}`);
       const res = await fetch(`/api/returnciudad/${email}`); // Call the API with the user's email
       const data = await res.json();
-      console.log(`Fetched city: ${data.ciudad}`);  // Log fetched city for debugging
+      console.log(`Fetched city: ${data.ciudad}`);
       setCity(data.ciudad); // Set the city once it's fetched
     } catch (error) {
       console.error('Error fetching user city:', error);
+    } finally {
+      setLoadingCity(false); // Finished fetching city
     }
   };
 
   // Fetch discotecas from the API when the user's city is available
   const fetchDiscotecas = async (city) => {
     try {
-      console.log(`Fetching discotecas for city: ${city}`);  // Log city for debugging
+      setLoadingDiscotecas(true); // Start loading discotecas
+      console.log(`Fetching discotecas for city: ${city}`);
       const res = await fetch(`/api/discotecas/${city}`);
       const data = await res.json();
-      console.log('Fetched discotecas:', data);  // Log fetched discotecas for debugging
-      setDiscotecas(data);
+      console.log('Fetched discotecas:', data); // Log the response to check the structure
+      setDiscotecas(data); // Set the discotecas once fetched
     } catch (error) {
       console.error('Error fetching discotecas:', error);
     } finally {
-      setLoading(false); // Set loading to false after the fetch completes
+      setLoadingDiscotecas(false); // Finished fetching discotecas
     }
   };
 
   // UseEffect to fetch the user's city on component mount
   useEffect(() => {
     if (session?.user?.email) {
-      fetchUserCity(session.user.email); // Fetch the city using the logged-in user's email
+      fetchUserCity(session.user.email);
     }
   }, [session]);
 
   // UseEffect to fetch discotecas when the city is available
   useEffect(() => {
-    if (city) {
-      fetchDiscotecas(city); // Fetch discotecas for the fetched city
+    if (city && !loadingCity) {
+      fetchDiscotecas(city); // Fetch discotecas once the city is fetched
     }
-  }, [city]); 
+  }, [city, loadingCity]); // Re-fetch when the city is set and city loading is finished
+
 
   return (
     <>
@@ -93,8 +101,10 @@ export default function Home({ session }) {
         <div className="container">
           <div className="button-container">
           <div className="fetch-section">
-          {loading ? (
-                <p>Loading discotecas...</p> // Display loading state
+          {loadingCity ? (
+                <p>Loading city...</p> // Display loading state for city
+              ) : loadingDiscotecas ? (
+                <p>Loading discotecas...</p> // Display loading state for discotecas
               ) : discotecas.length > 0 ? (
                 <ul>
                   {discotecas.map((discoteca) => (
