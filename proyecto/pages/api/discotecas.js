@@ -14,6 +14,8 @@ export default async function handler(req, res) {
         ciudad: ciudad, // Filtrar por ciudad
       },
     });
+    
+    await prisma.$disconnect();
 
     return res.status(200).json(discotecas);
   } else {

@@ -1,7 +1,7 @@
 // RatingBox.js
 import React from 'react';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 const NavBar = ({}) => {
   const { data: session, status } = useSession();
