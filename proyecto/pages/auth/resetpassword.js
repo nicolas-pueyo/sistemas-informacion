@@ -13,16 +13,14 @@ export default function ResetPassword() {
 
     const res = await fetch('/api/auth/reset-password', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, newPassword }),
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      setMessage('Password updated successfully. You can now log in.');
+      setMessage('Password updated successfully.');
       router.push('/auth/signin');
     } else {
       setMessage(data.error || 'Error updating password.');
@@ -31,7 +29,7 @@ export default function ResetPassword() {
 
   return (
     <div>
-      <h1>Reset Password</h1>
+      <h1>Reset Your Password</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="password"
