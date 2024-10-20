@@ -1,35 +1,40 @@
-// pages/api/usuarios/[email].js
+// pages/api/returnciudad/[email].js
+
 import { PrismaClient } from '@prisma/client';
+import { getSession } from 'next-auth/react';
 
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
-  const { email } = req.query;
+  const { email } = req.query; // Get the email from the dynamic route
 
   if (req.method === 'GET') {
     try {
-      // Find the user by their email
+      const session = await getSession({ req });
+
+      if (!session || session.user.email !== email) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      // Fetch the user's city from the database using the email
       const user = await prisma.usuario.findUnique({
         where: { correo: email },
+        select: { nombre_usuario: true },
       });
 
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Return the user data
-      res.status(200).json({
-        name: user.nombre_usuario,
-        email: user.correo,
-      });
+      // Return the user's city
+      return res.status(200).json({ ciudad: user.ciudad });
     } catch (error) {
-      res.status(500).json({ error: 'Error fetching user data' });
+      console.error('Error fetching user city:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     } finally {
-        // Always disconnect Prisma after the request is completed
-        await prisma.$disconnect();
-      }
+      await prisma.$disconnect();
+    }
   } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} not allowed`);
+    return res.status(405).json({ message: 'Method not allowed' });
   }
 }
