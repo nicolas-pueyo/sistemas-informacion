@@ -14,6 +14,8 @@ export default async function handler(req, res) {
         evento: evento, // Filtrar por discoteca
       },
     });
+    
+      await prisma.$disconnect();
 
     return res.status(200).json(entradas);
   } else {

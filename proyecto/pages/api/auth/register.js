@@ -35,7 +35,10 @@ export default async function handler(req, res) {
     } catch (error) {
       console.error('Error creating user:', error);
       res.status(500).json({ error: 'Error creating user' });
-    }
+    } finally {
+        // Always disconnect Prisma after the request is completed
+        await prisma.$disconnect();
+      }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }

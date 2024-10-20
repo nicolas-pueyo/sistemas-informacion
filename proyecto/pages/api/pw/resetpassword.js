@@ -24,7 +24,10 @@ export default async function handler(req, res) {
       return res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
       return res.status(400).json({ error: 'Invalid or expired token' });
-    }
+    } finally {
+        // Always disconnect Prisma after the request is completed
+        await prisma.$disconnect();
+      }
   }
 
   res.setHeader('Allow', ['POST']);

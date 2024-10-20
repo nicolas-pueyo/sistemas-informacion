@@ -24,7 +24,10 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       res.status(500).json({ error: 'Error fetching user data' });
-    }
+    } finally {
+        // Always disconnect Prisma after the request is completed
+        await prisma.$disconnect();
+      }
   } else {
     res.setHeader('Allow', ['GET']);
     res.status(405).end(`Method ${req.method} not allowed`);

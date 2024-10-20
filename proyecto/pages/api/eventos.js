@@ -14,10 +14,12 @@ export default async function handler(req, res) {
         discoteca: discoteca, // Filtrar por discoteca
       },
     });
+    
+    await prisma.$disconnect();
 
-    return res.status(200).json(eventos);
+    return res.status(200).json(eventos); 
   } else {
     console.log('Método no permitido');
     return;
-  }
+  } 
 }

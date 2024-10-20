@@ -61,6 +61,11 @@ export default function SignIn() {
               <button className="redirect" role="button">¿Aún no tienes cuenta? Regístrate</button>
             </Link>
           </div>
+          <div style={{ marginTop: '10px' }}>
+            <Link href="/auth/resetrequest">
+              <button className="redirect" role="button">¿Has olvidado tu contraseña?</button>
+            </Link>
+          </div>
         </form>
 
         {showPopup && (

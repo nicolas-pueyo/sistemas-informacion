@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import NavBar from '../../components/NavBar';
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('/api/auth/reset-password', {
+    const res = await fetch('/api/pw/resetpassword', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, newPassword }),
@@ -28,19 +29,22 @@ export default function ResetPassword() {
   };
 
   return (
-    <div>
-      <h1>Reset Your Password</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Update Password</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <>
+        <NavBar/>
+        <div>
+          <h1>Reset Your Password</h1>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <button type="submit">Update Password</button>
+          </form>
+          {message && <p>{message}</p>}
+        </div>
+    </>
   );
 }
