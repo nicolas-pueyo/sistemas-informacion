@@ -29,25 +29,31 @@ export async function getServerSideProps(context) {
 
 
 
-export default function Home() {
+export default function Home({ session }) {
   const [discotecas, setDiscotecas] = useState([]);
   const [city, setCity] = useState(null); // City of the logged-in user
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Add loading state
 
-  const fetchUserCity = async () => {
+  // Fetch user's city from the API
+  const fetchUserCity = async (email) => {
     try {
-      const res = await fetch('/api/returnciudad/ciudad'); // Call the API to get the user's city
+      console.log(`Fetching city for user email: ${email}`);  // Log email for debugging
+      const res = await fetch(`/api/returnciudad/${email}`); // Call the API with the user's email
       const data = await res.json();
+      console.log(`Fetched city: ${data.ciudad}`);  // Log fetched city for debugging
       setCity(data.ciudad); // Set the city once it's fetched
     } catch (error) {
       console.error('Error fetching user city:', error);
     }
   };
 
+  // Fetch discotecas from the API when the user's city is available
   const fetchDiscotecas = async (city) => {
     try {
+      console.log(`Fetching discotecas for city: ${city}`);  // Log city for debugging
       const res = await fetch(`/api/discotecas/${city}`);
       const data = await res.json();
+      console.log('Fetched discotecas:', data);  // Log fetched discotecas for debugging
       setDiscotecas(data);
     } catch (error) {
       console.error('Error fetching discotecas:', error);
@@ -58,15 +64,17 @@ export default function Home() {
 
   // UseEffect to fetch the user's city on component mount
   useEffect(() => {
-    fetchUserCity(); // Fetch the city when the component mounts
-  }, []);
+    if (session?.user?.email) {
+      fetchUserCity(session.user.email); // Fetch the city using the logged-in user's email
+    }
+  }, [session]);
 
   // UseEffect to fetch discotecas when the city is available
   useEffect(() => {
     if (city) {
       fetchDiscotecas(city); // Fetch discotecas for the fetched city
     }
-  }, [city]);
+  }, [city]); 
 
   return (
     <>
