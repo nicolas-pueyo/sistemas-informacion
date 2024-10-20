@@ -10,77 +10,65 @@ export default NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-        username: { label: "Username", type: "text" },  // Add username field
-        city: { label: "City", type: "text" }            // Add city field
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const { email, password, username, city, isSignup } = credentials;
+        const { email, password } = credentials;
 
-        if (isSignup) {
-          const existingUser = await prisma.usuario.findUnique({
-            where: { correo: email },
-          });
-
-          if (existingUser) {
-            throw new Error("User already exists");
-          }
-
-          // Hash password and create new user with additional fields
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const newUser = await prisma.usuario.create({
-            data: {
-              correo: email,
-              password: hashedPassword,
-              nombre_usuario: username,  // Save the username
-              ciudad: city                // Save the city
-            },
-          });
-          return { id: newUser.correo, email: newUser.correo };
-        }
-
-        // Handle login
+        // Look up the user by email
         const user = await prisma.usuario.findUnique({
           where: { correo: email },
         });
-        if (user && bcrypt.compareSync(password, user.password)) {
-          console.log("User during login:", user);
-          return { user:user };
+
+        if (!user) {
+          throw new Error('No user found with this email');
         }
 
-        return null;
+        // Validate the password using bcrypt
+        const isValidPassword = await bcrypt.compare(password, user.password);
+
+        if (!isValidPassword) {
+          throw new Error('Invalid email or password');
+        }
+
+        // If authentication is successful, return the user object
+        return {
+          id: user.correo,  // Use email as the unique ID
+          email: user.correo,
+          name: user.nombre_usuario,
+        };
       },
     }),
   ],
-  session: {
-    jwt: true,
-    maxAge: 30 * 24 * 60 * 60, // 30 dias
-    updateAge: 24 * 60 * 60, // 24 hours
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET,
-  },
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-  },
   callbacks: {
-    async jwt(token, user) {
+    async jwt({ token, user }) {
+      // When a user signs in, add their information to the token
       if (user) {
-        token.id = user.user.correo; // Access nested 'user' object correctly
+        token.id = user.id;  // Store email as the user ID
+        token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
-    async session(session, token) {
-      if (token.id) {
-        session.user.id = token.id;
-      } else {
-        session.user.id = token.email;  // Use email as a fallback if id is missing
+    async session({ session, token }) {
+      // Attach the token data to the session object
+      if (token) {
+        session.user.id = token.id;  // Use email as the ID
+        session.user.email = token.email;
+        session.user.name = token.name;
       }
       return session;
-    }
-  }
-  
+    },
+  },
+  session: {
+    jwt: true,  // Use JWT for session tokens
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,  // Ensure you have a JWT secret
+  },
+  pages: {
+    signIn: '/auth/signin',  // Redirect here if not signed in
+  },
+  secret: process.env.NEXTAUTH_SECRET,  // Ensure a secret is set for NextAuth
 });

@@ -1,8 +1,24 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import NavBar from '../components/NavBar';
 
+export async function getServerSideProps(context) {
+    const session = await getSession(context);
+  
+    if (session) {
+      return {
+        redirect: {
+          destination: '/home',  // Redirect to home if session is active
+          permanent: false,
+        },
+      };
+    }
+  
+    return {
+      props: {},  // No session, so just return empty props to render the page
+    };
+  }
 
 const Inicio = () => {
 

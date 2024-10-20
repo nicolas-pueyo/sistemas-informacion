@@ -9,7 +9,7 @@ const NavBar = ({}) => {
   return (
     <div id="home">
         <div id="left">
-                <Link href="/" className="home-icon">
+                <Link href="/home" className="home-icon">
                 <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
                 </Link>
               

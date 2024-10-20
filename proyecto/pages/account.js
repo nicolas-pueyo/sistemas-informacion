@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -20,19 +22,26 @@ export async function getServerSideProps(context) {
   }
 }
 
-const Account = () => {
 
+
+const Account = ({ session }) => {
     const [usuario, setUsuario] = useState(null);
 
-    const fetchUsuario = async () => {
-        const res = await fetch('/api/usuarios/2'); // el 1 es el id, se puede hacer dinamico, TODO
-        const data = await res.json();
-        setUsuario(data);
-    };
-
+    const fetchUsuario = async (email) => {
+        try {
+          const res = await fetch(`/api/usuarios/${email}`);  // Fetch user data by email
+          const data = await res.json();
+          setUsuario(data);
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      };
+    
     useEffect(() => {
-        fetchUsuario();
-    }, []);
+        if (session) {
+            fetchUsuario(session.user.email);  // Use email from the session object
+        }
+    }, [session]);  // Dependency on session
 
     return (
         <>
@@ -74,6 +83,9 @@ const Account = () => {
                 ) : (
                     <p>Cargando datos de cuenta...</p>
                 )}
+                <div>
+                    <button onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</button>
+                </div>
             </div>
         </>
     );
