@@ -2,7 +2,7 @@
 //TODO
 //ahora mismo nadie va a home, hayq ue hacer que cuandologges vayas aquo.!!!!!
 
-import Link from 'next/link'; // no tiene, tendrá eventualmente cuando añadamos discos
+import Link from 'next/link'; // no tiene, tendrá eventualmente cuando añadamos discotecas
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
@@ -31,25 +31,42 @@ export async function getServerSideProps(context) {
 
 export default function Home() {
   const [discotecas, setDiscotecas] = useState([]);
-  
+  const [city, setCity] = useState(null); // City of the logged-in user
+  const [loading, setLoading] = useState(true);
 
-  // Fetch discotecas from the API when the component loads
-  const fetchDiscotecas = async () => {
+  const fetchUserCity = async () => {
     try {
-      const res = await fetch('/api/discotecas');
-      const text = await res.text();
-      console.log('Raw response:', text);  // Imprime la respuesta cruda
-      const data = JSON.parse(text);
-      setDiscotecas(data);
+      const res = await fetch('/api/returnciudad/ciudad'); // Call the API to get the user's city
+      const data = await res.json();
+      setCity(data.ciudad); // Set the city once it's fetched
     } catch (error) {
-      console.error('Error parsing JSON:', error);
+      console.error('Error fetching user city:', error);
     }
   };
 
-   // useEffect to fetch discotecas when the component loads
-   useEffect(() => {
-    fetchDiscotecas(); // Fetch discotecas when the component mounts
-  }, []); // Empty dependency array to run the effect only once on component mount
+  const fetchDiscotecas = async (city) => {
+    try {
+      const res = await fetch(`/api/discotecas/${city}`);
+      const data = await res.json();
+      setDiscotecas(data);
+    } catch (error) {
+      console.error('Error fetching discotecas:', error);
+    } finally {
+      setLoading(false); // Set loading to false after the fetch completes
+    }
+  };
+
+  // UseEffect to fetch the user's city on component mount
+  useEffect(() => {
+    fetchUserCity(); // Fetch the city when the component mounts
+  }, []);
+
+  // UseEffect to fetch discotecas when the city is available
+  useEffect(() => {
+    if (city) {
+      fetchDiscotecas(city); // Fetch discotecas for the fetched city
+    }
+  }, [city]);
 
   return (
     <>
@@ -68,17 +85,19 @@ export default function Home() {
         <div className="container">
           <div className="button-container">
           <div className="fetch-section">
-            {discotecas.length > 0 ? (
-              <ul>
-              {discotecas.map((discoteca) => (
-                <li key={discoteca.id}>
-                  <RatingBox name={discoteca.name} rating={discoteca.rating} />
-                </li>
-              ))}
-              </ul>
-            ) : (
-              <p>No discotecas found.</p>
-            )}
+          {loading ? (
+                <p>Loading discotecas...</p> // Display loading state
+              ) : discotecas.length > 0 ? (
+                <ul>
+                  {discotecas.map((discoteca) => (
+                    <li key={discoteca.id}>
+                      <RatingBox name={discoteca.name} rating={discoteca.rating} />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No discotecas found in {city}.</p>
+              )}
           </div>
           </div>
         </div>
