@@ -1,52 +1,75 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import NavBar from '../../components/NavBar'; // Adjust if necessary
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import NavBar from '../../components/NavBar';
+import StandarButton from '../../components/StandarBotton';
+import Coin from '../../components/Coin';  // Assuming you want to reuse the Coin component
 
-export default function DiscotecaPage() {
+export default function DiscotecaDetail() {
   const router = useRouter();
-  const { discotecaId } = router.query; // Get the discotecaId from the URL
-  const [eventos, setEventos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { discotecaId } = router.query; // Get the discoteca ID from the URL
+  const [events, setEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
-  // Fetch eventos for the selected discoteca
-  const fetchEventos = async () => {
+  // Fetch events for the specific discoteca
+  const fetchEvents = async (id) => {
     try {
-      const res = await fetch(`/api/eventos/${discotecaId}`);
+      const res = await fetch(`/api/eventos/${id}`);
       const data = await res.json();
-      setEventos(data);
+      setEvents(data);
+      setLoadingEvents(false);
     } catch (error) {
-      console.error('Error fetching eventos:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching events:', error);
+      setLoadingEvents(false);
     }
   };
 
   useEffect(() => {
     if (discotecaId) {
-      fetchEventos();
+      fetchEvents(discotecaId); // Fetch events when discotecaId is available
     }
   }, [discotecaId]);
 
   return (
-    <>
+    <div>
+      <Head>
+        <meta charSet="utf-8" />
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Eventos en {discotecaId}</title>
+      </Head>
+
       <NavBar />
-      <div className="eventos-container">
-        {loading ? (
-          <p>Loading events...</p>
-        ) : eventos.length > 0 ? (
-          <ul>
-            {eventos.map((evento) => (
-              <li key={evento.id}>
-                <h3>{evento.name}</h3>
-                <p>{evento.description}</p>
-                <p>{evento.date}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No events found for this discoteca.</p>
-        )}
+
+      <h2 id="subtitulo">Eventos en {discotecaId}</h2>
+
+      <div id="box-info">
+        <div className="container">
+          <div className="fetch-section">
+            {loadingEvents ? (
+              <p>Cargando eventos...</p> // Display loading state
+            ) : events.length > 0 ? (
+              <ul>
+                {events.map((event) => (
+                  <li key={event.nombre}>
+                    <Link href={'/discotecas/${discoteca.nombre}'}>
+                    <p>{event.nombre}</p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No se encontraron eventos para {discotecaId}.</p>
+            )}
+          </div>
+        </div>
+        <Coin />  {/* Optional Coin component */}
       </div>
-    </>
+
+      <div className="centereddiv">
+        <StandarButton text="Compra tus entradas para {discotecaId}" />
+      </div>
+    </div>
   );
 }

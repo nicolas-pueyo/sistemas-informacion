@@ -112,7 +112,7 @@ export default function Home({  }) {
                 <ul>
                   {discotecas.map((discoteca) => (
                     <li key={discoteca.nombre}>
-                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} />
+                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} />
                     </li>
                   ))}
                 </ul>
