@@ -8,10 +8,11 @@ import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
 import NavBar from '../components/NavBar';
 import { getSession, useSession } from 'next-auth/react';
+import Coin from '../components/Coin';
+import StandarButton from '../components/StandarBotton';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  console.log('Server-side session:', session); // Log session here to check if it's available
 
   if (!session) {
     return {
@@ -32,20 +33,17 @@ export async function getServerSideProps(context) {
 export default function Home({  }) {
   const { data: clientSession, status } = useSession();
   const session = clientSession; // Prefer client-side session if available, fallback to server-side session
-  console.log('Client-side session:', session); // This should now log the correct session both client-side and server-side
   const [discotecas, setDiscotecas] = useState([]);
   const [city, setCity] = useState(null); // City of the logged-in user
   const [loadingCity, setLoadingCity] = useState(true); // Loading state for city fetch
   const [loadingDiscotecas, setLoadingDiscotecas] = useState(false); // Loading state for discotecas
 
-  // Fetch user's city from the API
-  const fetchUserCity = async (email) => {
+
+  const fetchCiudad = async (email) => {
     try {
-      console.log(`Fetching city for user email: ${email}`);
-      const res = await fetch(`/api/returnciudad/${email}`); // Call the API with the user's email
+      const res = await fetch(`/api/returnciudad/${email}`);  // Fetch user city by email
       const data = await res.json();
-      console.log(`Fetched city: ${data.ciudad}`);
-      setCity(data.ciudad); // Set the city once it's fetched
+      setCity(data.ciudad);
     } catch (error) {
       console.error('Error fetching user city:', error);
     } finally {
@@ -53,14 +51,14 @@ export default function Home({  }) {
     }
   };
 
+  
+
   // Fetch discotecas from the API when the user's city is available
   const fetchDiscotecas = async (city) => {
     try {
       setLoadingDiscotecas(true); // Start loading discotecas
-      console.log(`Fetching discotecas for city: ${city}`);
       const res = await fetch(`/api/discotecas/${city}`);
       const data = await res.json();
-      console.log('Fetched discotecas:', data); // Log the response to check the structure
       setDiscotecas(data); // Set the discotecas once fetched
     } catch (error) {
       console.error('Error fetching discotecas:', error);
@@ -69,10 +67,13 @@ export default function Home({  }) {
     }
   };
 
-  // UseEffect to fetch the user's city on component mount
   useEffect(() => {
-    if (session?.user?.email) {
-      fetchUserCity(session.user.email);
+    if (session) {
+      console.log("Session detected:", session);  // Verifica si la sesión existe
+      //fetchUsuario(session.user.email);  // Usa el email de la sesión
+      fetchCiudad(session.user.email);
+    } else {
+      console.log("No session detected");  // Verifica si no hay sesión
     }
   }, [session]);
 
@@ -95,7 +96,7 @@ export default function Home({  }) {
 
       <NavBar/>
 
-      <h2 id="subtitulo">Let the show begin</h2>
+      <h2 id="subtitulo">Discotecas</h2>
 
       <div id="box-info">
         <div className="container">
@@ -106,19 +107,26 @@ export default function Home({  }) {
               ) : loadingDiscotecas ? (
                 <p>Loading discotecas...</p> // Display loading state for discotecas
               ) : discotecas.length > 0 ? (
+                <>
+                console.log(discotecas)
                 <ul>
                   {discotecas.map((discoteca) => (
-                    <li key={discoteca.id}>
-                      <RatingBox name={discoteca.name} rating={discoteca.rating} />
+                    <li key={discoteca.nombre}>
+                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} />
                     </li>
                   ))}
                 </ul>
+                </>
               ) : (
                 <p>No discotecas found in {city}.</p>
               )}
           </div>
           </div>
+          <Coin/>
         </div>
+      </div>
+      <div className='centereddiv'>      
+        <StandarButton text="AQUI TIENES TUS ENTRADAS TONTAINA"/>
       </div>
     </>
   );

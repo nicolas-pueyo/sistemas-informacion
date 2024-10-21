@@ -16,7 +16,6 @@ export default async function handler(req, res) {
 
       // Close the Prisma connection
       await prisma.$disconnect();
-
       return res.status(200).json(discotecas);
     } catch (error) {
       console.error('Error fetching discotecas:', error);
