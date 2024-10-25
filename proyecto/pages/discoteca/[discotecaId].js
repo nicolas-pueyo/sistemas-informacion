@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NavBar from '../../components/NavBar';
 import StandarButton from '../../components/StandarBotton';
-import Coin from '../../components/Coin';  // Assuming you want to reuse the Coin component
 
 export default function DiscotecaDetail() {
   const router = useRouter();
@@ -12,6 +11,9 @@ export default function DiscotecaDetail() {
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
+  
+
+  
   // Fetch events for the specific discoteca
   const fetchEvents = async (id) => {
     try {
@@ -64,7 +66,6 @@ export default function DiscotecaDetail() {
             )}
           </div>
         </div>
-        <Coin />  {/* Optional Coin component */}
       </div>
 
       <div className="centereddiv">
