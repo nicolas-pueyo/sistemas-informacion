@@ -7,13 +7,10 @@ import StandarButton from '../../components/StandarBotton';
 
 export default function DiscotecaDetail() {
   const router = useRouter();
-  const { discotecaId } = router.query; // Get the discoteca ID from the URL
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const [discotecaId, setDiscotecaId] = useState('');
 
-  
-
-  
   // Fetch events for the specific discoteca
   const fetchEvents = async (id) => {
     try {
@@ -28,10 +25,27 @@ export default function DiscotecaDetail() {
   };
 
   useEffect(() => {
-    if (discotecaId) {
-      fetchEvents(discotecaId); // Fetch events when discotecaId is available
+    if (router.isReady && router.query.discotecaId) {
+      const id = router.query.discotecaId;
+      setDiscotecaId(id);
+      fetchEvents(id);
     }
-  }, [discotecaId]);
+  }, [router.isReady, router.query.discotecaId]);
+
+  if (!router.isReady || !discotecaId) {
+    return (
+      <div>
+        <Head>
+          <meta charSet="utf-8" />
+          <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Cargando...</title>
+        </Head>
+        <NavBar />
+        <p>Cargando...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -50,13 +64,13 @@ export default function DiscotecaDetail() {
         <div className="container">
           <div className="fetch-section">
             {loadingEvents ? (
-              <p>Cargando eventos...</p> // Display loading state
+              <p>Cargando eventos...</p>
             ) : events.length > 0 ? (
               <ul>
                 {events.map((event) => (
                   <li key={event.nombre}>
-                    <Link href={'/discotecas/${discoteca.nombre}'}>
-                    <p>{event.nombre}</p>
+                    <Link href={`/discoteca/${discotecaId}/${event.nombre}`}>
+                      <p>{event.nombre}</p>
                     </Link>
                   </li>
                 ))}
@@ -69,7 +83,7 @@ export default function DiscotecaDetail() {
       </div>
 
       <div className="centereddiv">
-        <StandarButton text="Compra tus entradas para {discotecaId}" />
+        <StandarButton text={`Compra tus entradas para ${discotecaId}`} />
       </div>
     </div>
   );
