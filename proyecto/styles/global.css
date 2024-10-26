@@ -171,6 +171,12 @@ ul {
   margin: 0;
   list-style: none; /* Removes bullet points */
 }
+
+#counter-section {
+  z-index: 1;
+  font-weight: 700;
+}
+
 /* Card and layout styles */
 .card {
     align-items: center;

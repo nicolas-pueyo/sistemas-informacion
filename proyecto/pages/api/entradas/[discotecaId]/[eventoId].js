@@ -14,20 +14,21 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Busca el evento con discotecaId y eventoId
-        const evento = await prisma.tipoEntradas.findMany({
+        console.log("Evento ID:", eventoId);
+        console.log("Discoteca ID:", discotecaId);
+
+        // Obtener todas las entradas relacionadas con el evento y la discoteca
+        const tipoEntradas = await prisma.tipoentrada.findMany({
             where: {
-                nombre: eventoId,
+                evento: eventoId,
                 discoteca: discotecaId,
             },
         });
 
-        if (!evento) {
-            return res.status(404).json({ error: 'Entradas no encontrado' });
+        // Verificar si existen entradas para el evento
+        if (!tipoEntradas || tipoEntradas.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron entradas para el evento y discoteca especificados.' });
         }
-
-        // Obtener los tipos de entrada
-        const tipoEntradas = evento.tipoentrada;
 
         res.status(200).json(tipoEntradas);
     } catch (error) {

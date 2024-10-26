@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NavBar from '../../../components/NavBar';
 import StandarButton from '../../../components/StandarBotton';
+import EntryCounter from '../../../components/EntryCounter';
+
 
 export default function EventoDetail() {
     const router = useRouter();
@@ -11,9 +13,9 @@ export default function EventoDetail() {
     const [loadingEntradas, setLoadingEntradas] = useState(true);
     const [entradas, setEntradas] = useState([]);
 
-    const fetchEntradas = async (id, id2) => {
+    const fetchEntradas = async (eventoId, discotecaId) => {
         try {
-            const res = await fetch(`/api/entradas/${id2}/${id}`);
+            const res = await fetch(`/api/entradas/${discotecaId}/${eventoId}`);
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
@@ -69,8 +71,12 @@ export default function EventoDetail() {
                             <ul>
                                 {entradas.map((entrada) => (
                                     <li key={entrada.nombre}>
-                                        <Link href={`/entradas/${entrada.nombre}`}>
-                                            <p>{entrada.nombre}</p>
+                                        <Link href={`${eventoId}/pagarEntradas`}>
+                                        <EntryCounter
+                                            entradaId={entrada.id} // Pass the entry ID
+                                            discoteca={discotecaId}
+                                            entradaName={entrada.nombre} // Pass the entry name
+                                        />
                                         </Link>
                                     </li>
                                 ))}
