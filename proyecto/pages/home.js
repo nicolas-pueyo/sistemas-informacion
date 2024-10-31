@@ -1,14 +1,11 @@
 
-//TODO
-//ahora mismo nadie va a home, hayq ue hacer que cuandologges vayas aquo.!!!!!
-
 import Link from 'next/link'; // no tiene, tendrá eventualmente cuando añadamos discotecas
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
 import NavBar from '../components/NavBar';
 import { getSession, useSession } from 'next-auth/react';
-import StandarButton from '../components/StandarBotton';
+import StandarButton from '../components/StandarButton';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -93,13 +90,12 @@ export default function Home({}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nébula</title>
       </Head>
-
       <NavBar/>
-      <Link href="/entradas/{usuario}">
+      <Link href="entradas">
         <div className='centereddiv'>      
           <StandarButton text="VER MIS ENTRADAS"/>
         </div>
-        </Link>
+      </Link>
       <h2 className="subtitulo">Discotecas</h2>
       <div className="box-info">
         <div className="container">

@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       if (!session || session.user.email !== email) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
+      console.log("ReturnCiudad email: ", email);
       // Fetch the user's city from the database using the email
       const user = await prisma.usuario.findUnique({
         where: { correo: email },

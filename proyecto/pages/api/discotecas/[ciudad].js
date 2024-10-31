@@ -8,6 +8,7 @@ export default async function handler(req, res) {
 
     try {
       // Query the database, filter by city
+      console.log("Ciudad: ", ciudad);
       const discotecas = await prisma.discoteca.findMany({
         where: {
           ciudad: ciudad, // Filtrar por ciudad

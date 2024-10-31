@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StandarButton = (text) => {
+const StandarButton = ({text}) => {
   return (
     <button className="standard-button">
       {text}

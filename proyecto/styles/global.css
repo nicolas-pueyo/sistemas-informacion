@@ -57,6 +57,16 @@ body, html {
     width:120px;
 }
 
+.home-icon {
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.home-icon:hover {
+  scale:1.2;
+  background-color: gray;
+}
+
 .home {
     background-color:black;
     height:15vh;
@@ -140,7 +150,12 @@ h3 {
     width: auto; /* Full width of the parent container */
     padding-left: 20px;
     padding-right: 20px;
-  }
+}
+
+
+li {
+  color:white;
+}
 
 .button-container button {
     flex: 1; /* Allow buttons to grow equally */

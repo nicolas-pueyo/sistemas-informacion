@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NavBar from '../../../components/NavBar';
-import StandarButton from '../../../components/StandarBotton';
+import StandarButton from '../../../components/StandarButton';
 import EntryCounter from '../../../components/EntryCounter';
 
 
