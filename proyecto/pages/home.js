@@ -8,7 +8,6 @@ import Head from 'next/head';
 import RatingBox from '../components/RatingBox';
 import NavBar from '../components/NavBar';
 import { getSession, useSession } from 'next-auth/react';
-import Coin from '../components/Coin';
 import StandarButton from '../components/StandarBotton';
 
 export async function getServerSideProps(context) {

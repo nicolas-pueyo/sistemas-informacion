@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       // Fetch events associated with the discoteca, filtering by the discoteca name
       const eventos = await prisma.evento.findMany({
         where: {
-          discoteca: discotecaId, // Filter by discoteca field (not the composite key)
+          discoteca: { equals: discotecaId }
         },
       });
 
