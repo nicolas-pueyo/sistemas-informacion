@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import NavBar from '../../components/NavBar';
 
+
 export default function ResetRequest() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Estado para mostrar que la solicitud está en curso
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Activar el estado de carga al enviar el formulario
 
     try {
       const res = await fetch('/api/pw/resetrequest', {
@@ -15,41 +18,38 @@ export default function ResetRequest() {
         body: JSON.stringify({ email }),
       });
 
-      const text = await res.text(); // Get raw response text
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await res.json() : null;
 
-      // Try parsing the response to JSON if it's valid
-      try {
-        const data = JSON.parse(text);
-
-        if (res.ok) {
-          setMessage('Password reset link sent to your email.');
-        } else {
-          setMessage(data.error || 'Error sending password reset link.');
-        }
-      } catch (parseError) {
-        console.error('Failed to parse response:', text);
-        setMessage('Unexpected response from the server.');
+      if (res.ok) {
+        setMessage('Enlace de restablecimiento de contraseña enviado a tu correo.');
+      } else {
+        setMessage(data?.error || 'Error al enviar el enlace de restablecimiento de contraseña.');
       }
     } catch (error) {
-      console.error('Failed to send reset request:', error);
-      setMessage('Failed to send reset request.');
+      console.error('Error en la solicitud de restablecimiento:', error);
+      setMessage('Error en la solicitud de restablecimiento.');
+    } finally {
+      setLoading(false); // Desactivar el estado de carga
     }
   };
 
   return (
     <>
-      <NavBar/>
+      <NavBar />
       <div>
-        <h1>Request Password Reset</h1>
+        <h1>Solicitar Restablecimiento de Contraseña</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Ingresa tu correo electrónico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit">Send Reset Link</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Enviando...' : 'Enviar Enlace de Restablecimiento'}
+          </button>
         </form>
         {message && <p>{message}</p>}
       </div>

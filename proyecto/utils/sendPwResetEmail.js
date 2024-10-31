@@ -1,25 +1,29 @@
+// utils/sendEmail.js
 import nodemailer from 'nodemailer';
 
-export const sendPasswordResetEmail = async (email, resetLink) => {
-  // Configure Nodemailer with Mailgun's sandbox SMTP settings
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,    // Mailgun SMTP host
-    port: process.env.EMAIL_PORT,    // Mailgun SMTP port (587 for TLS)
-    secure: false,                   // Use TLS
-    auth: {
-      user: process.env.EMAIL_USER,  // Mailgun sandbox SMTP username
-      pass: process.env.EMAIL_PASS,  // Mailgun sandbox SMTP password
-    },
-  });
+export async function sendEmail({ to, subject, html }) {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
 
-  // Define the email options
-  const mailOptions = {
-    from: 'no-reply@sandboxXXXX.mailgun.org',  // Sender email (use your sandbox domain)
-    to: email,                                // Recipient email (must be authorized)
-    subject: 'Password Reset Request',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
-  };
+    const mailOptions = {
+      from: '"Nebula" ${process.env.SMTP_USER}',
+      to,
+      subject,
+      html,
+    };
 
-  // Send the email using the transporter
-  await transporter.sendMail(mailOptions);
-};
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (error) {
+    console.error('Error al enviar el correo:', error);
+    return { success: false, error };
+  }
+}
