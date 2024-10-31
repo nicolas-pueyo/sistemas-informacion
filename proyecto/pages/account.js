@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { getSession, useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import NavBar from '../components/NavBar';
@@ -79,9 +78,9 @@ const Account = () => {
             <NavBar/>
 
             
-            <h2 id="subtitulo">Mis Datos de Cuenta</h2>
+            <h2 className="subtitulo">Mis Datos de Cuenta</h2>
 
-            <div id="box-info">
+            <div className="box-info">
             {userCity ? (
                     <div>
                         <p><strong>Nombre:</strong> {session.user.name}</p>

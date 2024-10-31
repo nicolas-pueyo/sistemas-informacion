@@ -33,7 +33,7 @@ const Inicio = () => {
 
             <NavBar/>
 
-            <div id="body">
+            <div className="body">
                 <Link href="/auth/signin">
                     <button className="login" role="button">Iniciar sesión</button>
                 </Link>

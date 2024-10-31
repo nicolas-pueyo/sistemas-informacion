@@ -30,12 +30,13 @@ export async function getServerSideProps(context) {
 
 
 
-export default function Home({  }) {
+export default function Home({}) {
   const { data: clientSession, status } = useSession();
   const session = clientSession; // Prefer client-side session if available, fallback to server-side session
   const [discotecas, setDiscotecas] = useState([]);
   const [city, setCity] = useState(null); // City of the logged-in user
   const [loadingCity, setLoadingCity] = useState(true); // Loading state for city fetch
+  const [usuario, setUsuario] = useState(null);
   const [loadingDiscotecas, setLoadingDiscotecas] = useState(false); // Loading state for discotecas
 
 
@@ -95,10 +96,13 @@ export default function Home({  }) {
       </Head>
 
       <NavBar/>
-
-      <h2 id="subtitulo">Discotecas</h2>
-
-      <div id="box-info">
+      <Link href="/entradas/{usuario}">
+        <div className='centereddiv'>      
+          <StandarButton text="VER MIS ENTRADAS"/>
+        </div>
+        </Link>
+      <h2 className="subtitulo">Discotecas</h2>
+      <div className="box-info">
         <div className="container">
           <div className="button-container">
           <div className="fetch-section">
@@ -122,11 +126,7 @@ export default function Home({  }) {
               )}
           </div>
           </div>
-          <Coin/>
         </div>
-      </div>
-      <div className='centereddiv'>      
-        <StandarButton text="AQUI TIENES TUS ENTRADAS TONTAINA"/>
       </div>
     </>
   );

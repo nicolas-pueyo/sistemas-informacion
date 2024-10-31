@@ -42,9 +42,9 @@ export default function DiscotecaDetail() {
 
       <NavBar />
 
-      <h2 id="subtitulo">Eventos en {discotecaId}</h2>
+      <h2 className="subtitulo">Eventos en {discotecaId}</h2>
 
-      <div id="box-info">
+      <div className="box-info">
         <div className="container">
           <div className="fetch-section">
             {loadingEvents ? (

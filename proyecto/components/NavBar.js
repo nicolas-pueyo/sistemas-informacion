@@ -7,24 +7,24 @@ const NavBar = ({}) => {
   const { data: session, status } = useSession();
 
   return (
-    <div id="home">
-        <div id="left">
+    <div className="home">
+        <div className="left">
                 <Link href="/home" className="home-icon">
-                <img className="home-icon" id="pres-logo" src="/img/logo-trans.png" alt="Logo" />
+                <img className="pres-logo" src="/img/logo-trans.png" alt="Logo" />
                 </Link>
               
         </div>
-        <div id="center">
-          <h1 id="main-title">NÉBULA</h1>
+        <div className="center">
+          <h1 className="main-title">NÉBULA</h1>
         </div>
-        <div id="right">
+        <div className="right">
           {status === 'authenticated' && (
             <>
               <Link href="/account" className="home-icon">
-                <img id="session" className="session" src="/img/session.png" alt="Account" />
+                <img className="session" src="/img/session.png" alt="Account" />
               </Link>
               <Link href="/ubi" className="home-icon">
-                <img id="ubi" className="ubi" src="/img/ubi.png" alt="Location" />
+                <img className="ubi" src="/img/ubi.png" alt="Location" />
               </Link>
             </>
           )}
