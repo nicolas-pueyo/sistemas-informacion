@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import NavBar from '../../components/NavBar';
 import StandarButton from '../../components/StandarButton';
+import EventoBox from '../../components/EventosBox';
 
 export default function DiscotecaDetail() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function DiscotecaDetail() {
                 {events.map((event) => (
                   <li key={event.nombre}>
                     <Link href={`/discoteca/${discotecaId}/${event.nombre}`}>
-                      <p>{event.nombre}</p>
+                      <EventoBox evento={event.nombre} fecha={new Date(event.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} />   
                     </Link>
                   </li>
                 ))}

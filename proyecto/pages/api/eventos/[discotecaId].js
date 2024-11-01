@@ -12,6 +12,10 @@ export default async function handler(req, res) {
         where: {
           discoteca: { equals: discotecaId }
         },
+        select: {
+          nombre: true, // Fetch the discoteca name
+          fecha: true,     // Fetch the fecha (date)
+        }
       });
 
       return res.status(200).json(eventos);

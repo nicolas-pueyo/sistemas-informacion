@@ -1,15 +1,20 @@
-// pages/pagarEntradas.js
-
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import QRCode from 'qrcode';
 
 const PagarEntradas = () => {
+    const qrRef = useRef(null);
+
+    useEffect(() => {
+        if (typeof window !== "undefined" && qrRef.current) {
+            QRCode.toCanvas(qrRef.current, 'http://nigga.com', function (error) {
+                if (error) console.error(error);
+            });
+        }
+    }, []);
+
     return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#f0f0f0' }}>
-            <img
-                src="/img/nigga.svg"  // Path to the SVG in the public folder
-                alt="Compra Exitosa"
-                style={{ width: '500px', height: '500px' }}  // Adjust size as needed
-            />
+            <canvas ref={qrRef} id="qrcode" />
         </div>
     );
 };
