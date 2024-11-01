@@ -5,7 +5,6 @@ const EntradaUser = ( {entrada, evento, fecha, discoteca, ciudad, seguroDev}) =>
 
     const seguro = seguroDev => 
         seguroDev === true ? " Si" : " No";
-        ;
 
     return (
         <>
