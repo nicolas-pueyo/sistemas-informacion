@@ -2,6 +2,7 @@ import Head from 'next/head';
 import NavBar from '../components/NavBar'
 import { useState, useEffect } from 'react';
 import { getSession, useSession } from 'next-auth/react';
+import EntradaUser from '../components/EntradaUser'
 
 //hay que pillar el nombre de usuario y hacer la query
 
@@ -47,7 +48,6 @@ export default function Entradas() {
         if (session) {
           console.log("Session detected:", session);  // Verifica si la sesión existe
           //fetchUsuario(session.user.email);  // Usa el email de la sesión
-          console.log(session.user.email);
           fetchEntradas(session.user.email);
         } else {
           console.log("No session detected");  // Verifica si no hay sesión
@@ -75,9 +75,9 @@ export default function Entradas() {
                                     <>
                                     <ul>
                                         {entradas.map((entrada) => (
-                                           <li key={entrada.evento}>
-                                                {entrada.evento}
-                                            </li>
+                                           <EntradaUser entrada={entrada.entrada} evento={entrada.evento}
+                                           fecha={entrada.fecha} discoteca={entrada.discoteca} ciudad={entrada.ciudad}
+                                           seguroDev={entrada.seguro_devolucion} />
                                         ))}
                                         </ul>
                                     </>
