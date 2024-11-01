@@ -54,7 +54,6 @@ export default function Entradas() {
         }
       }, [session]);
 
-
     return(
         <>
             <Head>
@@ -76,7 +75,8 @@ export default function Entradas() {
                                     <ul>
                                         {entradas.map((entrada) => (
                                            <EntradaUser entrada={entrada.entrada} evento={entrada.evento}
-                                           fecha={entrada.fecha} discoteca={entrada.discoteca} ciudad={entrada.ciudad}
+                                           fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
+                                           discoteca={entrada.discoteca} ciudad={entrada.ciudad}
                                            seguroDev={entrada.seguro_devolucion} />
                                         ))}
                                         </ul>
