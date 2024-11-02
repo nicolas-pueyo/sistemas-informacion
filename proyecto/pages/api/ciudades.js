@@ -1,3 +1,5 @@
+// pages/api/ciudades.js
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -5,13 +7,16 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const ciudades = await prisma.ciudad.findMany();
-      res.status(200).json(ciudades);
+      // Fetch the list of cities and map to strings
+      const ciudades = await prisma.ciudad.findMany({
+        select: { nombre: true }, // Only fetch the 'nombre' field
+      });
+
+      // Send an array of city names (strings) instead of objects
+      res.status(200).json(ciudades.map(ciudad => ciudad.nombre));
     } catch (error) {
-      res.status(500).json({ error: 'Error fetching ciudades' });
-    } finally {
-      // Always disconnect Prisma after the request is completed
-      await prisma.$disconnect();
+      console.error('Error fetching cities:', error);
+      res.status(500).json({ message: 'Error fetching cities' });
     }
   } else {
     res.setHeader('Allow', ['GET']);

@@ -4,11 +4,10 @@ import { getSession, useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import NavBar from '../components/NavBar';
 
-
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
-  if(!session) {
+  if (!session) {
     return {
       redirect: {
         destination: '/',
@@ -19,84 +18,71 @@ export async function getServerSideProps(context) {
 
   return {
     props: { session },
-  }
+  };
 }
 
-
-
 const Account = () => {
-    const { data: clientSession, status } = useSession();
-    const session = clientSession; // Prefer client-side session if available, fallback to server-side session
-    //const [userName, setUserName] = useState(null);
-    const [userCity, setUserCity] = useState(null);
 
-    /*
-    const fetchUsuario = async (email) => {
-        try {
-          console.log("Fetching user name for email:", email);  // Verifica que el correo sea correcto
-          const res = await fetch(`/api/returnnombre/${email}`);  // Fetch user real name by email
-          const data = await res.json();
-          console.log("Received user name data:", data);  // Imprime lo que devuelve la API
-          setUserName(data);
-        } catch (error) {
-          console.error('Error fetching user name:', error);
-        }
-      };
-      */
+  const { data: clientSession, status } = useSession();
 
-      const fetchCiudad = async (email) => {
-        try {
-          console.log("Fetching user city for email:", email);  // Verifica que el correo sea correcto
-          const res = await fetch(`/api/returnciudad/${email}`);  // Fetch user city by email
-          const data = await res.json();
-          console.log("Received user city data:", data);  // Imprime lo que devuelve la API
-          setUserCity(data);
-        } catch (error) {
-          console.error('Error fetching user city:', error);
-        }
-      };
-    
-      useEffect(() => {
-        if (session) {
-          console.log("Session detected:", session);  // Verifica si la sesión existe
-          //fetchUsuario(session.user.email);  // Usa el email de la sesión
-          fetchCiudad(session.user.email);
-        } else {
-          console.log("No session detected");  // Verifica si no hay sesión
-        }
-      }, [session]);
+  const [userCity, setUserCity] = useState(null);
 
-    return (
-        <>
-            <Head>
-                <meta charSet="utf-8" />
-                <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Nébula - Account</title>
-            </Head>
+  const fetchCiudad = async (email) => {
 
-            <NavBar/>
+    try {
+      const res = await fetch(`/api/returnciudad/${encodeURIComponent(email)}`);
 
-            
-            <h2 className="subtitulo">Mis Datos de Cuenta</h2>
+      if (!res.ok) throw new Error("Failed to fetch city");
 
-            <div className="box-info">
-            {userCity ? (
-                    <div>
-                        <p><strong>Nombre:</strong> {session.user.name}</p>
-                        <p><strong>Email:</strong> {session.user.email}</p>
-                        <p><strong>Ciudad:</strong> {userCity.ciudad}</p>
-                    </div>
-                ) : (
-                    <p>Cargando datos de cuenta...</p>
-                )}
+      const data = await res.json();
+      setUserCity(data);
+    } catch (error) {
+      console.error('Error fetching user city:', error);
+    }
+  };
 
-                <div>
-                    <button onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</button>
-                </div>
-            </div>
-        </>
-    );
+  useEffect(() => {
+
+
+    if (status === 'authenticated' && clientSession?.user?.email) {
+      fetchCiudad(clientSession.user.email);
+    } else if (status === 'unauthenticated') {
+      console.log("Session unauthenticated");
+    } else {
+      console.log("Session is still loading");
+    }
+  }, [status, clientSession]);
+
+  return (
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nébula - Account</title>
+      </Head>
+
+      <NavBar />
+
+      <h2 className="subtitulo">Mis Datos de Cuenta</h2>
+
+      <div className="box-info">
+        {status === 'loading' ? (
+          <p>Cargando datos de cuenta...</p>
+        ) : (
+          <div>
+            <p><strong>Nombre:</strong> {clientSession?.user?.name || 'No disponible'}</p>
+            <p><strong>Email:</strong> {clientSession?.user?.email || 'No disponible'}</p>
+            <p><strong>Ciudad:</strong> {userCity?.ciudad || 'Cargando...'}</p>
+          </div>
+        )}
+
+        <div>
+          <button onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</button>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Account;

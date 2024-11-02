@@ -1,35 +1,65 @@
-// RatingBox.js
-import React from 'react';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import CityDropdown from './CityDropdown';
+import { useCityContext } from '../contexts/CityContext'; // Import combined context
 
-const NavBar = ({}) => {
+const NavBar = () => {
   const { data: session, status } = useSession();
+  const { userCity, setUserCity, cities } = useCityContext(); // Access userCity and cities from context
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const updateCity = async (selectedCity) => {
+    try {
+      const res = await fetch('/api/updateCity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: session.user.email, city: selectedCity }),
+      });
+
+      if (res.ok) {
+        setUserCity(selectedCity);
+        setIsDropdownOpen(false);
+      } else {
+        console.error('Failed to update city');
+      }
+    } catch (error) {
+      console.error('Error updating city:', error);
+    }
+  };
 
   return (
     <div className="home">
-        <div className="left">
-                <Link href="/home" className="home-icon">
-                <img className="pres-logo" src="/img/logo-trans.png" alt="Logo" />
-                </Link>
-              
-        </div>
-        <div className="center">
-          <h1 className="main-title">NÉBULA</h1>
-        </div>
-        <div className="right">
-          {status === 'authenticated' && (
-            <>
-              <Link href="/account" className="home-icon">
-                <img className="session" src="/img/session.png" alt="Account" />
-              </Link>
-              <Link href="/ubi" className="home-icon">
-                <img className="ubi" src="/img/ubi.png" alt="Location" />
-              </Link>
-            </>
-          )}
-        </div>
+      <div className="left">
+        <Link href="/home" className="home-icon">
+          <img className="pres-logo" src="/img/logo-trans.png" alt="Logo" />
+        </Link>
       </div>
+      <div className="center">
+        <h1 className="main-title">NÉBULA</h1>
+      </div>
+      <div className="right">
+        {status === 'authenticated' && (
+          <>
+            <Link href="/account" className="home-icon">
+              <img className="session" src="/img/session.png" alt="Account" />
+            </Link>
+            <div className="dropdown-container">
+              <img
+                className="ubi home-icon"
+                src="/img/ubi.png"
+                alt="Location"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              />
+              {isDropdownOpen && (
+                <CityDropdown cities={cities} onSelectCity={updateCity} />
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 

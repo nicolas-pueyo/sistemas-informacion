@@ -6,6 +6,8 @@ import RatingBox from '../components/RatingBox';
 import NavBar from '../components/NavBar';
 import { getSession, useSession } from 'next-auth/react';
 import StandarButton from '../components/StandarButton';
+import { useCityContext } from '../contexts/CityContext';
+
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -27,6 +29,7 @@ export async function getServerSideProps(context) {
 
 
 export default function Home({}) {
+  const { userCity } = useCityContext(); // Access selected city from context
   const { data: clientSession, status } = useSession();
   const session = clientSession; // Prefer client-side session if available, fallback to server-side session
   const [discotecas, setDiscotecas] = useState([]);
@@ -81,6 +84,11 @@ export default function Home({}) {
     }
   }, [city, loadingCity]); // Re-fetch when the city is set and city loading is finished
 
+  useEffect(() => {
+    if (userCity) {
+      fetchDiscotecas(userCity); // Fetch discotecas based on the current userCity
+    }
+  }, [userCity]); // Re-fetch discotecas whenever userCity changes
 
   return (
     <>
@@ -111,7 +119,7 @@ export default function Home({}) {
                 <ul>
                   {discotecas.map((discoteca) => (
                     <li key={discoteca.nombre}>
-                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} />
+                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} city={city} />
                     </li>
                   ))}
                 </ul>
