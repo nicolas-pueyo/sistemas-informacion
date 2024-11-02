@@ -1,12 +1,19 @@
+// pages/discoteca/[discotecaId]/[eventoId]/pagarEntradas.js
+
+import { useRouter } from 'next/router';
 import EntradaQRCode from '../../../../components/EntradaQRCode';
 
-const HomePage = () => {
+const PagarEntradasPage = () => {
+  const router = useRouter();
+  const { fileName } = router.query;
+
   return (
     <div>
-      {/* Other content */}
-      <EntradaQRCode />
+      <h1>Finalizar Compra</h1>
+      {/* Pass the fileName to EntradaQRCode */}
+      <EntradaQRCode fileName={fileName} />
     </div>
   );
 };
 
-export default HomePage;
+export default PagarEntradasPage;

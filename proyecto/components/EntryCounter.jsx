@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 
-const EntryCounter = ({ entradaId, discoteca, entradaName }) => {
+const EntryCounter = ({ entradaId, discoteca, entradaName, onCountChange }) => {
   const [count, setCount] = useState(0);
 
-  // Function to handle increasing the count
   const incrementCount = () => {
-    setCount(prevCount => prevCount + 1);
+    setCount(prevCount => {
+      const newCount = prevCount + 1;
+      if (onCountChange) onCountChange(newCount);
+      return newCount;
+    });
   };
 
-  // Function to handle decreasing the count
   const decrementCount = () => {
-    setCount(prevCount => (prevCount > 0 ? prevCount - 1 : 0));
+    setCount(prevCount => {
+      const newCount = prevCount > 0 ? prevCount - 1 : 0;
+      if (onCountChange) onCountChange(newCount);
+      return newCount;
+    });
   };
 
   return (

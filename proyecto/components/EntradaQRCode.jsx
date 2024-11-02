@@ -1,48 +1,55 @@
-// components/EntradaQRCode.js
-
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import QRCode from 'qrcode';
 
-const EntradaQRCode = () => {
+const EntradaQRCode = ({ usuario, discotecaId, eventoId, fecha }) => {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { fileName } = router.query; // Extract fileName from query parameters
 
   useEffect(() => {
-    const generateQRCode = async () => {
+    const generarQRCode = async () => {
+      if (!fileName) {
+        console.error('File name not available');
+        setLoading(false);
+        return;
+      }
+
       try {
-        // Fetch the local IP address from the API route
-        const res = await fetch('/api/get-local-ip');
-        const data = await res.json();
-        const pcLocalIP = data.localIp;
+        // 1. Get the local IP address
+        const resIp = await fetch('/api/get-local-ip');
+        const ipData = await resIp.json();
+        const pcLocalIP = ipData.localIp;
 
-        const port = '3000'; // Adjust if your app runs on a different port
-        const filePath = '/entradas/entrada_usuario_discoteca_evento_fecha.pdf';
-
+        const port = '3000'; // Adjust if your app is on another port
+        const filePath = `/entradas/${fileName}`;
         const fileUrl = `http://${pcLocalIP}:${port}${filePath}`;
 
+        // 2. Generate the QR Code
         const qrDataUrl = await QRCode.toDataURL(fileUrl);
         setQrCodeDataUrl(qrDataUrl);
       } catch (error) {
-        console.error('Error generating QR code:', error);
+        console.error('Error generating the QR code:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    generateQRCode();
-  }, []);
+    generarQRCode();
+  }, [fileName]);
 
   if (loading) {
-    return <p>Generating QR code...</p>;
+    return <p>Generando QR code...</p>;
   }
 
   return (
     <div>
-      <h3>Scan this QR code to access your entrada:</h3>
+      <h3>Escanea este QR para acceder a tu entrada:</h3>
       {qrCodeDataUrl ? (
-        <img src={qrCodeDataUrl} alt="Entrada QR Code" />
+        <img src={qrCodeDataUrl} alt="QR Code de entrada" />
       ) : (
-        <p>Error generating QR code.</p>
+        <p>Error al generar el QR code.</p>
       )}
     </div>
   );
