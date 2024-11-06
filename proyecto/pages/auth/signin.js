@@ -1,5 +1,5 @@
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import NavBar from '../../components/NavBar';
@@ -9,6 +9,7 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -19,13 +20,21 @@ export default function SignIn() {
       password: password,
     });
 
-    if (res.ok) {
-      router.push('/home');
-    } else {
+    if (!res.ok) {
       setError(res.error || 'An error occurred');
       setShowPopup(true);
     }
   };
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      if (session.user.tipo === 'Admin') {
+        router.push('/adminniga/adminiga'); // Redirige a la página de administrador
+      } else {
+        router.push('/home'); // Redirige a la página de usuario regular
+      }
+    }
+  }, [session, status, router]);
 
   return (
     <>

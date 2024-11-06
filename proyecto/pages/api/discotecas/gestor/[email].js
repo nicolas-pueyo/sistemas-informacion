@@ -4,13 +4,12 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const { ciudad } = req.query; // `ciudad` comes from the dynamic route
-
+    const { email } = req.query; 
     try {
       // Query the database, filter by city
       const discotecas = await prisma.discoteca.findMany({
         where: {
-          ciudad: ciudad, // Filtrar por ciudad
+          gestor: email, 
         },
       });
 

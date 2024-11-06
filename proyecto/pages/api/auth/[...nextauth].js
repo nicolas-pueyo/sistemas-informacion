@@ -37,6 +37,7 @@ export default NextAuth({
           id: user.correo,  // Use email as the unique ID
           email: user.correo,
           name: user.nombre_usuario,
+          tipo: user.tipo,
         };
       },
     }),
@@ -48,6 +49,7 @@ export default NextAuth({
         token.id = user.id;  // Store email as the user ID
         token.email = user.email;
         token.name = user.name;
+        token.tipo = user.tipo;
       }
       return token;
     },
@@ -57,6 +59,7 @@ export default NextAuth({
         session.user.id = token.id;  // Use email as the ID
         session.user.email = token.email;
         session.user.name = token.name;
+        session.user.tipo = token.tipo;
       }
       return session;
     },

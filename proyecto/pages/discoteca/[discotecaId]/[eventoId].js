@@ -135,11 +135,12 @@ export default function EventoDetail() {
           </div>
         </div>
       </div>
-
-      <div className="centereddiv">
-        <StandarButton className="buy-entradas" // hacer que escale a mas pequeño? diría
-          text={`Compra tus entradas para ${eventoId}`} onClick={handleDownloadPDF}
-        />
+      <div style={{ margin: "10px" }}>
+        <div className="centereddiv">
+          <StandarButton className="buy-entradas" // hacer que escale a mas pequeño? diría
+            text={`Compra tus entradas para ${eventoId}`} onClick={handleDownloadPDF}
+          />
+        </div>
       </div>
     </div>
   );
