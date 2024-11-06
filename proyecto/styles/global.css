@@ -113,9 +113,10 @@ h2, h1 {
     border: 3px solid white;
     margin-top: 5vh;
     width:70%;
-    height:100vh;
+    height:60vh;
     background-color: black;
     border-radius: 25px;
+    overflow: hidden;
 }
 
 .subtitulo {
@@ -189,7 +190,36 @@ ul {
 
 .counter-section {
   z-index: 1;
-  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  transition: color 0.3s S;
+}
+
+.arrow-button:disabled {
+  color: rgb(73, 73, 73);
+  cursor: not-allowed;
+}
+
+.arrow-button:hover:not(:disabled) {
+  color: #a295eb;
+}
+
+.count-display {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 3px 0;
+  color: white;
 }
 
 /* Card and layout styles */
@@ -361,6 +391,7 @@ ul {
 .centereddiv {
   display:grid;
   place-content:center;
+  width: 100%;
 }
 
 .entrada-wrapper p{
@@ -383,9 +414,17 @@ ul {
 
 .evento-wrapper {
   display:flex;
+  justify-content: space-between;
   border: 2px solid white;
   border-radius: 24px;
   margin: 10px;
+  padding: 5px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.evento-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* fondo más claro en hover */
+  border-color: #e0e0e0; /* borde más claro en hover */
 }
 
 .evento-left {
@@ -459,4 +498,20 @@ ul {
 
 .dropdown-content li:hover {
   background-color: #f0f0f0;
+}
+
+.buy-entradas {
+  min-width: 10px;       
+  max-width: 100%;       
+  width: 40%;            
+  padding: 10px 20px;    
+  text-align: center;    
+  transition: width 0.3s ease; 
+}
+
+.scrollable-list {
+  max-height: 100%; 
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
 }

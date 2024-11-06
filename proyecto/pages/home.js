@@ -116,7 +116,7 @@ export default function Home({}) {
               ) : discotecas.length > 0 ? (
                 <>
                 console.log(discotecas)
-                <ul>
+                <ul className="scrollable-list">
                   {discotecas.map((discoteca) => (
                     <li key={discoteca.nombre}>
                       <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} city={city} />

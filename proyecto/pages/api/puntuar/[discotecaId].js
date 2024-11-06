@@ -16,6 +16,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: 'No autenticado' });
     }
     const correo_usuario = session.user.email;
+    const nombre_usuario = session.user.nombre;
 
     const { ciudad, rating } = req.body;
 
@@ -27,10 +28,11 @@ export default async function handler(req, res) {
       // Comprobar si el usuario ya ha puntuado esta discoteca
       const existingRating = await prisma.puntua.findUnique({
         where: {
-          discoteca_ciudad_correo_usuario: {
+          discoteca_ciudad_nombre_usuario: {
             discoteca: discotecaId,
             ciudad: ciudad,
             correo_usuario: correo_usuario,
+            nombre_usuario: nombre_usuario
           },
         },
       });

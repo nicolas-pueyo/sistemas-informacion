@@ -67,7 +67,7 @@ export default function DiscotecaDetail() {
             {loadingEvents ? (
               <p>Cargando eventos...</p>
             ) : events.length > 0 ? (
-              <ul>
+              <ul className="scrollable-list">
                 {events.map((event) => (
                   <li key={event.nombre}>
                     <Link href={`/discoteca/${discotecaId}/${event.nombre}`}>

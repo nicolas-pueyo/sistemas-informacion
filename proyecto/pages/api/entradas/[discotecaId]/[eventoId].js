@@ -24,6 +24,7 @@ export default async function handler(req, res) {
                 discoteca: discotecaId,
             },
         });
+        await prisma.$disconnect();
 
         // Verificar si existen entradas para el evento
         if (!tipoEntradas || tipoEntradas.length === 0) {

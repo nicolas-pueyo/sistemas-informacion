@@ -107,35 +107,37 @@ export default function EventoDetail() {
 
       <NavBar />
 
-      <h2 id="subtitulo">Entradas de {eventoId}</h2>
+      <h2 id="subtitulo" className="centereddiv">Entradas de {eventoId}</h2>
 
-      <div id="box-info">
+      <div className="box-info">
         <div className="container">
-          <div className="fetch-section">
-            {loadingEntradas ? (
-              <p>Cargando entradas...</p>
-            ) : entradas.length > 0 ? (
-              <ul>
-                {entradas.map((entrada) => (
-                  <li key={entrada.nombre}>
-                    <EntryCounter
-                      entradaId={entrada.id}
-                      discoteca={discotecaId}
-                      entradaName={entrada.nombre}
-                      onCountChange={(newCount) => handleCountChange(entrada.id, newCount)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No se encontraron entradas para {eventoId}.</p>
-            )}
+          <div className="button-container">
+            <div className="fetch-section">
+              {loadingEntradas ? (
+                <p>Cargando entradas...</p>
+              ) : entradas.length > 0 ? (
+                <ul className="scrollable-list">
+                  {entradas.map((entrada) => (
+                    <li key={entrada.nombre}>
+                      <EntryCounter
+                        entradaId={entrada.id}
+                        discoteca={discotecaId}
+                        entradaName={entrada.nombre}
+                        onCountChange={(newCount) => handleCountChange(entrada.id, newCount)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No se encontraron entradas para {eventoId}.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="centereddiv">
-        <StandarButton
+        <StandarButton className="buy-entradas" // hacer que escale a mas pequeño? diría
           text={`Compra tus entradas para ${eventoId}`} onClick={handleDownloadPDF}
         />
       </div>

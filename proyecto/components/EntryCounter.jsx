@@ -24,11 +24,13 @@ const EntryCounter = ({ entradaId, discoteca, entradaName, onCountChange }) => {
       <div className="content">
         <p className="heading">{entradaName}</p>
         <div className="counter-section">
-          <button onClick={decrementCount} disabled={count === 0}>
-            -
+        <button className="arrow-button" onClick={incrementCount}>
+            ▲
           </button>
-          <span>{count}</span>
-          <button onClick={incrementCount}>+</button>
+          <span className="count-display">{count}</span>
+          <button className="arrow-button" onClick={decrementCount} disabled={count === 0}>
+            ▼
+          </button>
         </div>
       </div>
     </div>
