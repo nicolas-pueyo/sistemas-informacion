@@ -111,10 +111,11 @@ export default function Signup() {
             </div>
 
             <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
-              <option value="" disabled>Select city</option>
-              {cities.map((city) => (
-                <option key={city.nombre} value={city.nombre}>
-                  {city.nombre}
+              <option value="">Select city</option>
+              {cities.map((city) => 
+                (
+                <option key={city} value={city}>
+                  {city}
                 </option>
               ))}
             </select>
