@@ -58,6 +58,7 @@ export default function EventoDetail() {
     }
 
     try {
+      console.log("yo soy el nigga, y tengo o no tengo seguro? la realidad es que", seguros)
       const res = await fetch('/api/generarEntrada', {
         method: 'POST',
         headers: {
@@ -68,7 +69,7 @@ export default function EventoDetail() {
           counts,
           eventoId,
           discotecaId,
-          userEmail: session.user.email,
+          userEmail: session?.user?.email,
           seguros
         }),
       });

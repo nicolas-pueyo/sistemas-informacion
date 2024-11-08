@@ -27,27 +27,29 @@ export default async function handler(req, res) {
 
       // Add each entrada as a new page
       entradas.forEach((entrada, index) => {
-        if (index !== 0) {
-          doc.addPage();
+        // Solo crear página si hay entradas seleccionadas para este tipo
+        if (counts[entrada.id] && counts[entrada.id] > 0) {
+          if (index !== 0) {
+            doc.addPage();
+          }
+
+          // Add a title
+          doc.setFontSize(titleFontSize);
+          doc.text(`Entrada para ${entrada.nombre}`, margin, margin);
+
+          // Add a horizontal line
+          doc.setLineWidth(0.5);
+          doc.line(margin, margin + 5, 190, margin + 5);
+
+          // Add details
+          doc.setFontSize(textFontSize);
+          doc.text(`Discoteca: ${discotecaId}`, margin, margin + 15);
+          doc.text(`Evento: ${eventoId}`, margin, margin + 25);
+          doc.text(`Número de entradas: ${counts[entrada.id]}`, margin, margin + 35);
+          doc.text(`Comprador: ${userEmail}`, margin, margin + 45);
+          doc.text(`Seguro de devolución: ${seguros[entrada.id] ? 'Sí' : 'No'}`, margin, margin + 55);
+          doc.text(`Fecha: ${new Date(entrada.fecha).toLocaleDateString()}`, margin, margin + 65);
         }
-
-        // Add a title
-        doc.setFontSize(titleFontSize);
-        doc.text(`Entrada para ${entrada.nombre}`, margin, margin);
-
-        // Add a horizontal line
-        doc.setLineWidth(0.5);
-        doc.line(margin, margin + 5, 190, margin + 5);
-
-        // Add details
-        doc.setFontSize(textFontSize);
-        doc.text(`Discoteca: ${discotecaId}`, margin, margin + 15);
-        doc.text(`Evento ID: ${eventoId}`, margin, margin + 25);
-        doc.text(`Cantidad seleccionada: ${counts[entrada.id] || 0}`, margin, margin + 35);
-        doc.text(`Comprador: ${userEmail}`, margin, margin + 45);
-
-        // Optionally, add a QR code or barcode for the entrada
-        // You can use a library like 'qrcode' to generate a QR code and add it to the PDF
       });
 
       const safeDiscotecaName = discotecaId.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -63,13 +65,14 @@ export default async function handler(req, res) {
       // Write the PDF to the file system
       fs.writeFileSync(filePath, Buffer.from(doc.output('arraybuffer')));
 
-      // Save entries to database
-      const currentDate = new Date();
-      
       // Create entries in the database for each selected ticket
       for (const entrada of entradas) {
-        if (counts[entrada.id] > 0) {
-          const existingWithInsurance = await prisma.posee.findFirst({
+        if (counts[entrada.id] && counts[entrada.id] > 0) {
+          const hasSeguro = seguros[entrada.id];
+          console.log(`Processing entrada ${entrada.nombre}: ${counts[entrada.id]} tickets with seguro: ${hasSeguro}`);
+          
+          // Buscar entrada existente con el mismo estado de seguro
+          const existingEntry = await prisma.posee.findFirst({
             where: {
               entrada: entrada.nombre,
               evento: eventoId,
@@ -77,12 +80,13 @@ export default async function handler(req, res) {
               ciudad: entrada.ciudad,
               fecha: entrada.fecha,
               correo_usuario: userEmail,
-              seguro_devolucion: true,
+              seguro_devolucion: hasSeguro,
             },
           });
 
-          if (existingWithInsurance) {
-            // Update the existing entry with insurance
+          if (existingEntry) {
+            console.log(`Updating existing entry: ${existingEntry.n_entradas} + ${counts[entrada.id]}`);
+            // Actualizar entrada existente
             await prisma.posee.update({
               where: {
                 entrada_evento_discoteca_ciudad_fecha_correo_usuario: {
@@ -92,60 +96,46 @@ export default async function handler(req, res) {
                   ciudad: entrada.ciudad,
                   fecha: entrada.fecha,
                   correo_usuario: userEmail,
-                },
+                }
               },
               data: {
-                n_entradas: existingWithInsurance.n_entradas + counts[entrada.id],
+                n_entradas: {
+                  increment: counts[entrada.id]
+                },
+                seguro_devolucion: hasSeguro,
               },
             });
           } else {
-            // Check for an entry without insurance
-            const existingWithoutInsurance = await prisma.posee.findFirst({
-              where: {
+            console.log(`Creating new entry with ${counts[entrada.id]} tickets`);
+            // Crear nueva entrada
+            await prisma.posee.create({
+              data: {
                 entrada: entrada.nombre,
                 evento: eventoId,
                 discoteca: discotecaId,
                 ciudad: entrada.ciudad,
                 fecha: entrada.fecha,
                 correo_usuario: userEmail,
-                seguro_devolucion: false,
+                seguro_devolucion: hasSeguro,
+                n_entradas: counts[entrada.id],
+                tipoentrada: {
+                  connect: {
+                    nombre_evento_discoteca_ciudad_fecha: {
+                      nombre: entrada.nombre,
+                      evento: eventoId,
+                      discoteca: discotecaId,
+                      ciudad: entrada.ciudad,
+                      fecha: entrada.fecha,
+                    }
+                  }
+                },
+                usuario: {
+                  connect: {
+                    correo: userEmail,
+                  }
+                }
               },
             });
-
-            if (existingWithoutInsurance) {
-              // Do not modify the entry without insurance
-              // Optionally, log or handle this case if needed
-            } else {
-              // Create a new entry with insurance
-              await prisma.posee.create({
-                data: {
-                  entrada: entrada.nombre,
-                  evento: eventoId,
-                  discoteca: discotecaId,
-                  ciudad: entrada.ciudad,
-                  fecha: entrada.fecha,
-                  correo_usuario: userEmail,
-                  seguro_devolucion: true,
-                  n_entradas: counts[entrada.id],
-                  tipoentrada: {
-                    connect: {
-                      nombre_evento_discoteca_ciudad_fecha: {
-                        nombre: entrada.nombre,
-                        evento: eventoId,
-                        discoteca: discotecaId,
-                        ciudad: entrada.ciudad,
-                        fecha: entrada.fecha,
-                      },
-                    },
-                  },
-                  usuario: {
-                    connect: {
-                      correo: userEmail,
-                    },
-                  },
-                },
-              });
-            }
           }
         }
       }

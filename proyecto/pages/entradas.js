@@ -73,16 +73,18 @@ export default function Entradas() {
                                 : entradas.length > 0 ? (
                                     <>
                                     <ul>
-                                        {entradas.map((entrada) => (
-                                           <EntradaUser 
-                                           entrada={entrada.entrada} 
-                                           evento={entrada.evento}
-                                           fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
-                                           discoteca={entrada.discoteca} ciudad={entrada.ciudad}
-                                           seguroDev={entrada.seguro_devolucion} 
-                                           nEntradas={entrada.n_entradas}
-                                           />
-                                        ))}
+                                    {entradas.map((entrada) => (
+                                    <EntradaUser 
+                                      key={`${entrada.evento}-${entrada.fecha}-${entrada.entrada}-${entrada.ciudad}`}
+                                      entrada={entrada.entrada} 
+                                      evento={entrada.evento}
+                                      fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
+                                      discoteca={entrada.discoteca} 
+                                      ciudad={entrada.ciudad}
+                                      seguroDev={entrada.seguro_devolucion} 
+                                      nEntradas={entrada.n_entradas}
+                                        />
+                                    ))}
                                         </ul>
                                     </>
                                 )
