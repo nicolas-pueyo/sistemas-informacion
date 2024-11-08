@@ -73,6 +73,7 @@ model tipoentrada {
   ciudad                                                   String   @db.VarChar(100)
   fecha                                                    DateTime @db.Date
   n_existencias                                            Int?
+  n_max_existencias                                        Int
   precio                                                   Decimal? @db.Decimal(10, 2)
   posee                                                    posee[]
   evento_tipoentrada_evento_discoteca_ciudad_fechaToevento evento   @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento", fields: [evento, discoteca, ciudad, fecha], references: [nombre, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
