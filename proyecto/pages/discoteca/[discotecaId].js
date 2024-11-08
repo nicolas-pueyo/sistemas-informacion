@@ -56,35 +56,37 @@ export default function DiscotecaDetail() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Eventos en {discotecaId}</title>
       </Head>
-
       <NavBar />
-
-      <h2 className="subtitulo">Eventos en {discotecaId}</h2>
-
-      <div className="box-info">
+      <div className="gradient-background">
         <div className="container">
-          <div className="fetch-section">
-            {loadingEvents ? (
-              <p>Cargando eventos...</p>
-            ) : events.length > 0 ? (
-              <ul className="scrollable-list">
-                {events.map((event) => (
-                  <li key={event.nombre}>
-                    <Link href={`/discoteca/${discotecaId}/${event.nombre}`}>
-                      <EventoBox evento={event.nombre} fecha={new Date(event.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} />   
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No se encontraron eventos para {discotecaId}.</p>
-            )}
+          <h2 className="subtitulo">Eventos en {discotecaId}</h2>
+
+          <div className="box-info">
+            <div className="container">
+              <div className="fetch-section">
+                {loadingEvents ? (
+                  <p>Cargando eventos...</p>
+                ) : events.length > 0 ? (
+                  <ul className="scrollable-list">
+                    {events.map((event) => (
+                      <li key={event.nombre}>
+                        <Link href={`/discoteca/${discotecaId}/${event.nombre}`}>
+                          <EventoBox evento={event.nombre} fecha={new Date(event.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} />   
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No se encontraron eventos para {discotecaId}.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="centereddiv">
+            <StandarButton text={`Compra tus entradas para ${discotecaId}`} />
           </div>
         </div>
-      </div>
-
-      <div className="centereddiv">
-        <StandarButton text={`Compra tus entradas para ${discotecaId}`} />
       </div>
     </div>
   );

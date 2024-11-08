@@ -62,24 +62,25 @@ const Account = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nébula - Account</title>
       </Head>
-
       <NavBar />
+      <div className="gradient-background">
+        <div className="container">
+        <h2 className="subtitulo">Mis Datos de Cuenta</h2>
+          <div className="box-info">
+            {status === 'loading' ? (
+              <p>Cargando datos de cuenta...</p>
+            ) : (
+              <div>
+                <p><strong>Nombre:</strong> {clientSession?.user?.name || 'No disponible'}</p>
+                <p><strong>Email:</strong> {clientSession?.user?.email || 'No disponible'}</p>
+                <p><strong>Ciudad:</strong> {userCity?.ciudad || 'Cargando...'}</p>
+              </div>
+            )}
 
-      <h2 className="subtitulo">Mis Datos de Cuenta</h2>
-
-      <div className="box-info">
-        {status === 'loading' ? (
-          <p>Cargando datos de cuenta...</p>
-        ) : (
-          <div>
-            <p><strong>Nombre:</strong> {clientSession?.user?.name || 'No disponible'}</p>
-            <p><strong>Email:</strong> {clientSession?.user?.email || 'No disponible'}</p>
-            <p><strong>Ciudad:</strong> {userCity?.ciudad || 'Cargando...'}</p>
+            <div className="centereddiv">
+              <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
+            </div>
           </div>
-        )}
-
-        <div className="centereddiv">
-          <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
         </div>
       </div>
     </>

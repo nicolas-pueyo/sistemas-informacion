@@ -1,15 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Space+Grotesk:wght@300..700&display=swap');
 
 body, html {
-    background: linear-gradient(135deg, rgba(32,0,56,1) 0%, rgba(81,0,128,1) 50%, rgba(203,32,218,1) 100%);
+    height:100%;
     min-height: 100vh;
     min-width:100vw;
-    background-size:cover;
-    background-attachment: fixed;
     margin:0;
+    padding:0;
+    overflow-x:hidden;
     font-family: Arial, sans-serif;
     background-repeat:no-repeat;  
-    padding-top: 15vh;  
+}
+
+* {
+  box-sizing:border-box;
 }
 
 .pres-logo {
@@ -80,6 +83,7 @@ body, html {
     top: 0; 
     left: 0; 
     z-index: 1000;
+    margin: 0;
 }
 
 .left {
@@ -89,10 +93,12 @@ body, html {
     align-items:center;
     float: left;
     width: 10%;
+    margin:0;
 }
 
 .right {
     padding: 20px;
+    margin:0;
     margin-right: 1vw;
     display:flex;
     justify-content: center;
@@ -109,15 +115,17 @@ h2, h1 {
 
 
 .box-info {
-    margin:auto;
-    border: 3px solid white;
-    margin-top: 5vh;
-    width:70%;
-    height:60vh;
-    background-color: black;
-    border-radius: 25px;
-    overflow: hidden;
+  margin: auto;
+  margin-top: 5vh;
+  width: 70%;
+  max-height: 70vh; /* Limita la altura para que no crezca demasiado */
+  overflow-y: auto; /* Permite el desplazamiento si hay demasiados elementos */
+  background-color: black;
+  border: 3px solid white;
+  border-radius: 25px;
+  padding: 20px;
 }
+
 
 .subtitulo {
     margin-top:3vh;
@@ -365,6 +373,7 @@ ul {
 }
 
 .standard-button {
+  display:block;
   margin: auto;
   padding: 10px 20px;
   font-size: 3dvh;; /* Same size as .heading */
@@ -533,18 +542,91 @@ ul {
   height:100%;
 }
 
+.gradient-background {
+  background: linear-gradient(-45deg, #6e0dd0, #a214ff, #36096d, #731dd8);
+  background-size: 300% 300%;
+  min-height: 100vh; /* Usa 'min-height' en lugar de 'height' */
+  display: flex;
+  flex-direction: column; /* Permite que crezca hacia abajo */
+  align-items: center;
+  justify-content: flex-start; /* Empieza desde arriba */
+  padding-top: 15vh; /* Espacio superior para la navbar */
+  padding-bottom: 20px; /* Espacio inferior para evitar el fondo blanco */
+  animation: gradientAnimation 12s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+.container {
+  width: 100%;
+  text-align: center;
+  margin: 15vh auto;
+  flex-grow: 1; /* Permite que el contenedor crezca hacia abajo */
+  overflow-y: auto; /* Añade un scroll si el contenido es demasiado alto */
+  padding-bottom: 50px;
+}
+
+.title {
+  font-size: 5rem;
+  margin: 0;
+  padding-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  font-weight: 300;
+  color: #f0f0f0;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .landing-button {
-  font-family: 'Space Grotesk', sans-serif;
-  margin: 10px 5px;
-  background-color: black;
-  border-radius: 8px;
-  border: 2px solid white;
-  color:white;
-  height: 60px;
-  width: 150px; 
-  transition: background-color 0.5s;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  width: 300px;
+  height: 70px;
+  padding: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin: 10px;
 }
 
 .landing-button:hover {
-  background-color: #a295eb;
+  background-color: #ffffff;
+  color: #6e0dd0;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .title {
+      font-size: 4rem;
+  }
+  .subtitle {
+      font-size: 1.2rem;
+  }
+  .landing-button {
+      font-size: 1rem;
+      padding: 10px 20px;
+  }
 }

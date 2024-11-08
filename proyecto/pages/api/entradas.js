@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     console.error('Error fetching entradas:', error);
       res.status(500).json({ message: 'Error fetching entradas' });
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
  } else {
     console.log('Método no permitido');

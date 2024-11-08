@@ -63,33 +63,40 @@ export default function Entradas() {
                 <title>Nébula - Entradas</title>
             </Head>
             <NavBar />
-            <h2 className="subtitulo">Mis entradas</h2>
-            <div className="box-info">
-                <div className="container">
-                    <div className="button-container">
-                        <div className="fetch-section">
-                            {loadingEntradas ? (
-                                <p>Cargando entradas...</p> )
-                                : entradas.length > 0 ? (
-                                    <>
-                                    <ul>
-                                        {entradas.map((entrada) => (
-                                           <EntradaUser entrada={entrada.entrada} evento={entrada.evento}
-                                           fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
-                                           discoteca={entrada.discoteca} ciudad={entrada.ciudad}
-                                           seguroDev={entrada.seguro_devolucion} />
-                                        ))}
-                                        </ul>
-                                    </>
-                                )
-                                : <p>No tienes ninguna entrada.</p>
-                            }
+            <div className="gradient-background">
+              <div className="container">
+                <h2 className="subtitulo">Mis entradas</h2>
+                <div className="box-info">
+                    <div className="container">
+                        <div className="button-container">
+                            <div className="fetch-section">
+                                {loadingEntradas ? (
+                                    <p>Cargando entradas...</p> )
+                                    : entradas.length > 0 ? (
+                                        <>
+                                        <ul>
+                                            {entradas.map((entrada) => (
+                                              <EntradaUser entrada={entrada.entrada} evento={entrada.evento}
+                                              fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
+                                              discoteca={entrada.discoteca} ciudad={entrada.ciudad}
+                                              seguroDev={entrada.seguro_devolucion} />
+                                            ))}
+                                            </ul>
+                                        </>
+                                    )
+                                    : <>
+                                      <img src='/img/rengar.png' /> 
+                                      <p>Vaya...parece que no tienes ninguna entrada.</p>
+                                      </>
+                                }
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      <div>
                     </div>
-                </div>
-            </div>
-            <div>
-            </div>
+                  </div>
+              </div>
         </>
     )
 }

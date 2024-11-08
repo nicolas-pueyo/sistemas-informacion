@@ -5,23 +5,18 @@ import NavBar from '../components/NavBar';
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
-  
     if (session) {
-      return {
-        redirect: {
-          destination: '/home',  // Redirect to home if session is active
-          permanent: false,
-        },
-      };
+        return {
+            redirect: {
+                destination: '/home',
+                permanent: false,
+            },
+        }
     }
-  
-    return {
-      props: {},  // No session, so just return empty props to render the page
-    };
-  }
+    return { props: {} }  
+}
 
 const Inicio = () => {
-
     return (
         <>
             <Head>
@@ -30,20 +25,25 @@ const Inicio = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Nébula - Inicio</title>
             </Head>
+            <div className="gradient-background">
+                <div className="container">
+                    <h1 className="title">NÉBULA</h1>
+                    <p className="subtitle">
+                        ¡Descubre las mejores discotecas y eventos en tu ciudad!
+                    </p>
 
-            <NavBar/>
-
-            <div className="body">
-                <Link href="/auth/signin">
-                    <button className="landing-button" role="button"><strong>¿YA TIENES CUENTA? INICIA SESIÓN</strong></button>
-                </Link>
-                <Link href="/auth/signup">
-                    <button className="landing-button" role="button"><strong>REGISTRATE</strong></button>
-                </Link>
+                    <div className="buttons">
+                        <Link href="/auth/signin">
+                            <button className="landing-button">¿YA TIENES CUENTA? INICIA SESIÓN</button>
+                        </Link>
+                        <Link href="/auth/signup">
+                            <button className="landing-button">REGÍSTRATE</button>
+                        </Link>
+                    </div>
+                </div>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Inicio;
-
+export default Inicio

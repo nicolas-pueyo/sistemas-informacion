@@ -133,38 +133,42 @@ export default function EventoDetail() {
 
       <h2 id="subtitulo" className="centereddiv">Entradas de {eventoId}</h2>
 
-      <div className="box-info">
+      <div className="gradient-background">
         <div className="container">
-          <div className="button-container">
-            <div className="fetch-section">
-              {loadingEntradas ? (
-                <p>Cargando entradas...</p>
-              ) : entradas.length > 0 ? (
-                <ul className="scrollable-list">
-                  {entradas.map((entrada) => (
-                    <li key={entrada.nombre}>
-                      <EntryCounter
-                        entradaId={entrada.id}
-                        discoteca={discotecaId}
-                        entradaName={entrada.nombre}
-                        onCountChange={(count, hasSeguro) => handleCountChange(entrada.id, count, hasSeguro)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No se encontraron entradas para {eventoId}.</p>
-              )}
+          <div className="box-info">
+            <div className="container">
+              <div className="button-container">
+                <div className="fetch-section">
+                  {loadingEntradas ? (
+                    <p>Cargando entradas...</p>
+                  ) : entradas.length > 0 ? (
+                    <ul className="scrollable-list">
+                      {entradas.map((entrada) => (
+                        <li key={entrada.nombre}>
+                          <EntryCounter
+                            entradaId={entrada.id}
+                            discoteca={discotecaId}
+                            entradaName={entrada.nombre}
+                            onCountChange={(count, hasSeguro) => handleCountChange(entrada.id, count, hasSeguro)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No se encontraron entradas para {eventoId}.</p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div style={{ margin: "10px" }}>
-        <div className="centereddiv">
-          <StandarButton className="buy-entradas" // hacer que escale a mas pequeño? diría
-            text={`Compra tus entradas para ${eventoId}`} onClick={handleDownloadPDF}
-            disabled={!isPurchaseEnabled} // Disable button if no entradas are selected
-          />
+          <div style={{ margin: "10px" }}>
+            <div className="centereddiv">
+              <StandarButton className="buy-entradas" // hacer que escale a mas pequeño? diría
+                text={`Compra tus entradas para ${eventoId}`} onClick={handleDownloadPDF}
+                disabled={!isPurchaseEnabled} // Disable button if no entradas are selected
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

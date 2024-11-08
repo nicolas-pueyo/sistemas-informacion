@@ -47,7 +47,7 @@ const resetPasswordUrl = `${process.env.NEXTAUTH_URL}/auth/resetpassword?token=$
 } catch (error) {
   return res.status(400).json({ error: 'No se pudo enviar solicitud' });
 } finally {
-  await prisma.$disconnect;
+  await prisma.$disconnect();
 }
   if (result.success) {
     res.status(200).json({ message: 'Correo de restablecimiento enviado' });
