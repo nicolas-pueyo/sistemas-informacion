@@ -24,5 +24,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error updating city:', error);
     res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    await prisma.$disconnect;
   }
 }

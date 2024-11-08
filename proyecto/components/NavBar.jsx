@@ -53,7 +53,9 @@ const NavBar = () => {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               />
               {isDropdownOpen && (
-                <CityDropdown cities={cities} onSelectCity={updateCity} />
+                <div className="dropdown-content">
+                  <CityDropdown cities={cities} onSelectCity={updateCity} />
+                </div>
               )}
             </div>
           </>

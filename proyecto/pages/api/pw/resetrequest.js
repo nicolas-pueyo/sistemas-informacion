@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const { email } = req.body;
   
-
+try {
   if (!email) {
     return res.status(400).json({ message: 'El correo electrónico es requerido' });
   }
@@ -44,7 +44,11 @@ const resetPasswordUrl = `${process.env.NEXTAUTH_URL}/auth/resetpassword?token=$
            <a href="${resetPasswordUrl}">Restablecer contraseña</a>
            <p>Este enlace expirará en 1 hora.</p>`,
   });
-
+} catch (error) {
+  return res.status(400).json({ error: 'No se pudo enviar solicitud' });
+} finally {
+  await prisma.$disconnect;
+}
   if (result.success) {
     res.status(200).json({ message: 'Correo de restablecimiento enviado' });
   } else {

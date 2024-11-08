@@ -27,27 +27,27 @@ export default async function handler(req, res) {
       // Comprobar si el usuario ya ha puntuado esta discoteca
       const existingRating = await prisma.puntua.findUnique({
         where: {
-          discoteca_ciudad_nombre_usuario: {
+          discoteca_ciudad_correo_usuario: {
             discoteca: discotecaId,
             ciudad: ciudad,
-            nombre_usuario: correo_usuario //...
-          },
-        },
+            correo_usuario: correo_usuario
+          }
+        }
       });
 
       if (existingRating) {
         // Actualizar la puntuación existente
         await prisma.puntua.update({
           where: {
-            discoteca_ciudad_nombre_usuario: {
+            discoteca_ciudad_correo_usuario: {
               discoteca: discotecaId,
               ciudad: ciudad,
-              nombre_usuario: correo_usuario,
-            },
+              correo_usuario: correo_usuario
+            }
           },
           data: {
-            calificacion: rating,
-          },
+            calificacion: rating
+          }
         });
       } else {
         // Crear una nueva puntuación
@@ -55,9 +55,9 @@ export default async function handler(req, res) {
           data: {
             discoteca: discotecaId,
             ciudad: ciudad,
-            nombre_usuario: correo_usuario,
-            calificacion: rating,
-          },
+            correo_usuario: correo_usuario,
+            calificacion: rating
+          }
         });
       }
 
@@ -96,6 +96,8 @@ export default async function handler(req, res) {
     } catch (error) {
       console.error('Error al guardar la puntuación:', error);
       return res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+      await prisma.$disconnect;
     }
   } else {
     res.setHeader('Allow', ['POST']);
