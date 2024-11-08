@@ -14,15 +14,18 @@ export default function Signup() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Estado para el rol seleccionado
+  const [rol, setRol] = useState('');
+
   useEffect(() => {
     async function fetchCities() {
       try {
         const res = await fetch('/api/ciudades');
         const data = await res.json();
-        setCities(Array.isArray(data) ? data : []);  // Ensure cities is always an array
+        setCities(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching cities:', error);
-        setCities([]);  // Set cities as an empty array in case of an error
+        setCities([]);
       }
     }
     fetchCities();
@@ -33,7 +36,7 @@ export default function Signup() {
     setIsSubmitting(true);
 
     try {
-      // Send a request to the signup API route
+      // Enviar una solicitud al endpoint de registro
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -44,16 +47,17 @@ export default function Signup() {
           password: contrase_a,
           username: usuario,
           city: ciudad,
+          role: rol, // Añadimos el rol al cuerpo de la solicitud
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Error during registration');
+        throw new Error(data.error || 'Error durante el registro');
       }
 
-      // If signup is successful, log the user in
+      // Si el registro es exitoso, logueamos al usuario
       const signInRes = await signIn('credentials', {
         redirect: false,
         email: correo,
@@ -61,15 +65,25 @@ export default function Signup() {
       });
 
       if (signInRes.ok) {
-        router.push('/home');
+        if(rol == "User") {
+          router.push('/home');
+        }
+        else {
+          router.push('/adminniga/adminiga');
+        }
       } else {
-        setError(signInRes.error || 'Error during sign-in');
+        setError(signInRes.error || 'Error durante el inicio de sesión');
       }
     } catch (err) {
       setError(err.message);
     }
 
     setIsSubmitting(false);
+  };
+
+  // Función para seleccionar el rol
+  const handleRoleSelect = (selectedRole) => {
+    setRol((prevRole) => (prevRole === selectedRole ? '' : selectedRole));
   };
 
   return (
@@ -112,19 +126,52 @@ export default function Signup() {
 
             <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
               <option value="">Select city</option>
-              {cities.map((city) => 
-                (
+              {cities.map((city) => (
                 <option key={city} value={city}>
                   {city}
                 </option>
               ))}
             </select>
+
+            {/* Botones de selección de rol */}
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('User')}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: rol === 'User' ? '#4CAF50' : '#f0f0f0',
+                  color: rol === 'User' ? 'white' : 'black',
+                  border: '1px solid #ccc',
+                }}
+              >
+                Usuario
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('Admin')}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: rol === 'Admin' ? '#4CAF50' : '#f0f0f0',
+                  color: rol === 'Admin' ? 'white' : 'black',
+                  border: '1px solid #ccc',
+                }}
+              >
+                Admin
+              </button>
+            </div>
           </div>
+
+          {/* Mostrar error si existe */}
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          <button type="submit" disabled={isSubmitting} style={{ marginTop: '10px', padding: '10px 20px' }}>
+          
+          {/* Botón de registro */}
+          <button type="submit" disabled={isSubmitting} style={{ marginTop: '20px', padding: '10px 20px' }}>
             {isSubmitting ? 'Enviando...' : 'Registrarse'}
           </button>
         </form>
+
+        {/* Enlace para iniciar sesión si ya tiene una cuenta */}
         <div style={{ marginTop: '10px' }}>
           <Link href="/auth/signin">
             <button className="redirect" role="button">¿Ya tienes cuenta? Inicia sesión</button>
