@@ -548,3 +548,10 @@ ul {
 .landing-button:hover {
   background-color: #a295eb;
 }
+
+.button-container-item {
+  margin: 10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}

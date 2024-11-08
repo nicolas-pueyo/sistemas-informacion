@@ -30,7 +30,7 @@ const NavBar = () => {
   };
 
     // Determinar la ruta de redirección según el tipo de usuario
-    const redirectPath = session?.user?.tipo === 'User' ? '/home' : '/admin/admin';
+    const redirectPath = session.user.tipo === 'User' ? '/home' : '/admin/admin';
 
   return (
     <div className="home">
