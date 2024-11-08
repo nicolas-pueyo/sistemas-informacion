@@ -34,7 +34,6 @@ model evento {
   ciudad                                                        String        @db.VarChar(100)
   fecha                                                         DateTime      @db.Date
   n_existencias                                                 Int?
-  marca                                                         String?       @db.VarChar(100)
   discoteca_evento_discoteca_ciudadTodiscoteca                  discoteca     @relation("evento_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: NoAction, onUpdate: NoAction)
   tipoentrada_tipoentrada_evento_discoteca_ciudad_fechaToevento tipoentrada[] @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento")
 
@@ -47,23 +46,23 @@ model posee {
   discoteca         String      @db.VarChar(100)
   ciudad            String      @db.VarChar(100)
   fecha             DateTime    @db.Date
-  nombre_usuario    String      @db.VarChar(100)
+  correo_usuario    String      @db.VarChar(100)
   seguro_devolucion Boolean?
   tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
-  usuario           usuario     @relation(fields: [nombre_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
+  usuario           usuario     @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([entrada, evento, discoteca, ciudad, fecha, nombre_usuario])
+  @@id([entrada, evento, discoteca, ciudad, fecha, correo_usuario])
 }
 
 model puntua {
   discoteca                                    String    @db.VarChar(100)
   ciudad                                       String    @db.VarChar(100)
-  nombre_usuario                               String    @db.VarChar(100)
+  correo_usuario                               String    @db.VarChar(100)
   calificacion                                 Decimal?  @db.Decimal(10, 2)
   discoteca_puntua_discoteca_ciudadTodiscoteca discoteca @relation("puntua_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: NoAction, onUpdate: NoAction)
-  usuario                                      usuario   @relation(fields: [nombre_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
+  usuario                                      usuario   @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([discoteca, ciudad, nombre_usuario])
+  @@id([discoteca, ciudad, correo_usuario])
 }
 
 model tipoentrada {
@@ -74,7 +73,6 @@ model tipoentrada {
   fecha                                                    DateTime @db.Date
   n_existencias                                            Int?
   precio                                                   Decimal? @db.Decimal(10, 2)
-  n_max_existencias                                        Int?
   posee                                                    posee[]
   evento_tipoentrada_evento_discoteca_ciudad_fechaToevento evento   @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento", fields: [evento, discoteca, ciudad, fecha], references: [nombre, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
 
