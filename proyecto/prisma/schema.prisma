@@ -48,6 +48,7 @@ model posee {
   fecha             DateTime    @db.Date
   correo_usuario    String      @db.VarChar(100)
   seguro_devolucion Boolean?
+  n_entradas        Int
   tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: NoAction, onUpdate: NoAction)
   usuario           usuario     @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
 
