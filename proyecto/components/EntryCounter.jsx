@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-const EntryCounter = ({ entradaId, discoteca, entradaName, onCountChange }) => {
+const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
   const [count, setCount] = useState(0);
+  const [hasSeguro, setHasSeguro] = useState(false);
 
   const incrementCount = () => {
     setCount(prevCount => {
@@ -18,11 +19,24 @@ const EntryCounter = ({ entradaId, discoteca, entradaName, onCountChange }) => {
       return newCount;
     });
   };
+  
+  const handleSeguroChange = (e) => {
+    setHasSeguro(e.target.checked);
+    onCountChange(entradaId, count, e.target.checked);
+  };
+
 
   return (
     <div className="card">
       <div className="content">
         <p className="heading">{entradaName}</p>
+        <div className="counter-section">
+            <input
+              type="checkbox"
+              checked={hasSeguro}
+              onChange={handleSeguroChange}
+            /> Seguro
+        </div>
         <div className="counter-section">
         <button className="arrow-button" onClick={incrementCount}>
             ▲
