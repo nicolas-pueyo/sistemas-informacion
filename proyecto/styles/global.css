@@ -123,7 +123,6 @@ h2, h1 {
   background-color: black;
   border: 3px solid white;
   border-radius: 25px;
-  padding: 20px;
 }
 
 
@@ -574,7 +573,7 @@ ul {
 .container {
   width: 100%;
   text-align: center;
-  margin: 15vh auto;
+  margin: auto;
   flex-grow: 1; /* Permite que el contenedor crezca hacia abajo */
   overflow-y: auto; /* Añade un scroll si el contenido es demasiado alto */
   padding-bottom: 50px;
