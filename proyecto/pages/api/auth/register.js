@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password, username, city } = req.body;
+    const { email, password, username, city, role } = req.body;
 
     try {
       // Check if the user already exists
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
           password: hashedPassword,
           nombre_usuario: username,
           ciudad: city,
+          tipo: role
         },
       });
 
