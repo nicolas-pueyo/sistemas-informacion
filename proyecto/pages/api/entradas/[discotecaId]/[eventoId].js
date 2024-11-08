@@ -24,7 +24,6 @@ export default async function handler(req, res) {
                 discoteca: discotecaId,
             },
         });
-        await prisma.$disconnect();
 
         // Verificar si existen entradas para el evento
         if (!tipoEntradas || tipoEntradas.length === 0) {
@@ -35,5 +34,7 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error('Error fetching tipoentradas:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
+    } finally {
+        await prisma.$disconnect();
     }
 }
