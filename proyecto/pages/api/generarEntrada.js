@@ -70,22 +70,58 @@ export default async function handler(req, res) {
       for (const entrada of entradas) {
         if (counts[entrada.id] > 0) { // Only process entries with count > 0
           for (let i = 0; i < counts[entrada.id]; i++) { // Create an entry for each count
-            await prisma.posee.create({
-              data: {
+            const existingEntry = await prisma.posee.findFirst({
+              where: {
                 entrada: entrada.nombre,
                 evento: eventoId,
                 discoteca: discotecaId,
-                ciudad: entrada.ciudad, // Make sure you have the ciudad information
-                fecha: currentDate,
+                ciudad: entrada.ciudad,
                 correo_usuario: userEmail,
+              },
+            });            
+            if (existingEntry) {
+              // Si ya existe, actualizamos la cantidad de entradas sumando la nueva cantidad
+              await prisma.posee.update({
+                where: {
+                  entrada_evento_discoteca_ciudad_fecha_correo_usuario: {
+                    entrada: "dab",
+                    evento: "Zinderizar",
+                    discoteca: "Kenbo",
+                    ciudad: "Zaragoza",
+                    fecha: new Date("2024-10-31T00:00:00.000Z"),
+                    correo_usuario: "pene@pene.pene",
+                  },
+                },
+                data: {
+                  n_entradas: existingEntry.n_entradas + counts[entrada.id],
+                  seguro_devolucion: seguros[entrada.id] || existingEntry.seguro_devolucion,
+                },
+              });
+            } else {
+            await prisma.posee.create({
+              data: {
                 seguro_devolucion: seguros[entrada.id] || false,
                 tipoentrada: {
                   connect: {
-                    id: entrada.evento // Ensure this ID is correct and exists in your database
-                  }
-                }
-              }
+                    nombre_evento_discoteca_ciudad_fecha: {
+                      nombre: entrada.nombre,
+                      evento: eventoId,
+                      discoteca: discotecaId,
+                      ciudad: entrada.ciudad,
+                      fecha: entrada.fecha, // Asegúrate de que esta fecha sea correcta
+                    }
+                  },
+                },
+                usuario: {
+                  connect: {
+                    correo: userEmail,
+                  },
+                },
+                n_entradas: counts[entrada.id],
+              },
             });
+          }
+            
           }
         }
       }
