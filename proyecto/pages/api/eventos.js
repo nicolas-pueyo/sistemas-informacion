@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       console.log('Error fetching entradas', error);
       res.status(500).json({ message: 'Error fetching eventos' });
     } finally {
-      await prisma.$disconnect;
+      await prisma.$disconnect();
     }
   } else {
     console.log('Método no permitido');

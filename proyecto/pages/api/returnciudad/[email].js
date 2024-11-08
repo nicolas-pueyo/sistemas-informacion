@@ -24,6 +24,6 @@ export default async function handler(req, res) {
     console.error('Error fetching user city:', error);
     res.status(500).json({ message: 'Server error' });
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 }

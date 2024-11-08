@@ -98,36 +98,38 @@ export default function Home({}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nébula</title>
       </Head>
-      <NavBar/>
-      <Link href="entradas">
-        <div className='centereddiv'>      
-          <StandarButton text="VER MIS ENTRADAS"/>
-        </div>
-      </Link>
-      <h2 className="subtitulo">Discotecas</h2>
-      <div className="box-info">
+      <NavBar />
+      <div className="gradient-background">
         <div className="container">
-          <div className="button-container">
-          <div className="fetch-section">
-          {loadingCity ? (
-                <p>Loading city...</p> // Display loading state for city
-              ) : loadingDiscotecas ? (
-                <p>Loading discotecas...</p> // Display loading state for discotecas
-              ) : discotecas.length > 0 ? (
-                <>
-                console.log(discotecas)
-                <ul className="scrollable-list">
-                  {discotecas.map((discoteca) => (
-                    <li key={discoteca.nombre}>
-                      <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} city={city} />
-                    </li>
-                  ))}
-                </ul>
-                </>
-              ) : (
-                <p>No discotecas found in {city}.</p>
-              )}
-          </div>
+          <Link href="entradas">
+            <div className='centereddiv'>      
+              <StandarButton text="VER MIS ENTRADAS"/>
+            </div>
+          </Link>
+          <h2 className="subtitulo">Discotecas</h2>
+          <div className="box-info">
+              <div className="button-container">
+              <div className="fetch-section">
+              {loadingCity ? (
+                    <p>Loading city...</p> // Display loading state for city
+                  ) : loadingDiscotecas ? (
+                    <p>Loading discotecas...</p> // Display loading state for discotecas
+                  ) : discotecas.length > 0 ? (
+                    <>
+                    console.log(discotecas)
+                    <ul className="scrollable-list">
+                      {discotecas.map((discoteca) => (
+                        <li key={discoteca.nombre}>
+                          <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} city={city} />
+                        </li>
+                      ))}
+                    </ul>
+                    </>
+                  ) : (
+                    <p>No discotecas found in {city}.</p>
+                  )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

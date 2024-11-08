@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import NavBar from '../../components/NavBar';
+import Head from 'next/head'
 import { signIn } from 'next-auth/react';
 
 export default function Signup() {
@@ -93,82 +93,89 @@ export default function Signup() {
 
   return (
     <>
-      <NavBar />
-      <div style={{ textAlign: 'center', padding: '50px' }}>
-        <h1>Register</h1>
-        <form onSubmit={handleSignup}>
-          <div>
-            <div style={{ marginBottom: '15px' }}>
-              <input
-                type="email"
-                placeholder="Correo"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                required
-                style={{ padding: '10px', width: '100%' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <input
-                type="text"
-                placeholder="Nombre de Usuario"
-                value={usuario}
-                onChange={(e) => setUsuario(e.target.value)}
-                required
-                style={{ padding: '10px', width: '100%' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={contrase_a}
-                onChange={(e) => setContrase_a(e.target.value)}
-                required
-                style={{ padding: '10px', width: '100%' }}
-              />
+      <Head>
+      <meta charSet="utf-8" />
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nébula - Registro</title>
+      </Head>
+      <div className="gradient-background">
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <h1>Register</h1>
+          <form onSubmit={handleSignup}>
+            <div>
+              <div style={{ marginBottom: '15px' }}>
+                <input
+                  type="email"
+                  placeholder="Correo"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  required
+                  style={{ padding: '10px', width: '100%' }}
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <input
+                  type="text"
+                  placeholder="Nombre de Usuario"
+                  value={usuario}
+                  onChange={(e) => setUsuario(e.target.value)}
+                  required
+                  style={{ padding: '10px', width: '100%' }}
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <input
+                  type="password"
+                  placeholder="Contraseña"
+                  value={contrase_a}
+                  onChange={(e) => setContrase_a(e.target.value)}
+                  required
+                  style={{ padding: '10px', width: '100%' }}
+                />
+              </div>
+
+              <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
+                <option value="">Select city</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+
+              {/* Botones de selección de rol */}
+              <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                <button
+                  type="button"
+                  onClick={() => handleRoleSelect()}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: rol === 'Admin' ? '#4CAF50' : '#f0f0f0',
+                    color: rol === 'Admin' ? 'white' : 'black',
+                    border: '1px solid #ccc',
+                  }}
+                >
+                  Admin
+                </button>
+              </div>
             </div>
 
-            <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
-              <option value="">Select city</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            {/* Mostrar error si existe */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            
+            {/* Botón de registro */}
+            <button className="landing-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Enviando...' : 'Registrarse'}
+            </button>
+          </form>
 
-            {/* Botones de selección de rol */}
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
-              <button
-                type="button"
-                onClick={() => handleRoleSelect()}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: rol === 'Admin' ? '#4CAF50' : '#f0f0f0',
-                  color: rol === 'Admin' ? 'white' : 'black',
-                  border: '1px solid #ccc',
-                }}
-              >
-                Admin
-              </button>
-            </div>
+          {/* Enlace para iniciar sesión si ya tiene una cuenta */}
+          <div style={{ marginTop: '10px' }}>
+            <Link href="/auth/signin">
+              <button className="redirect" role="button">¿Ya tienes cuenta? Inicia sesión</button>
+            </Link>
           </div>
-
-          {/* Mostrar error si existe */}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          
-          {/* Botón de registro */}
-          <button type="submit" disabled={isSubmitting} style={{ marginTop: '20px', padding: '10px 20px' }}>
-            {isSubmitting ? 'Enviando...' : 'Registrarse'}
-          </button>
-        </form>
-
-        {/* Enlace para iniciar sesión si ya tiene una cuenta */}
-        <div style={{ marginTop: '10px' }}>
-          <Link href="/auth/signin">
-            <button className="redirect" role="button">¿Ya tienes cuenta? Inicia sesión</button>
-          </Link>
         </div>
       </div>
     </>

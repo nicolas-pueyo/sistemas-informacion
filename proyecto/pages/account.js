@@ -82,43 +82,31 @@ const Account = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nébula - Account</title>
       </Head>
-
       <NavBar />
+      <div className="gradient-background">
+        <div className="container">
+        <h2 className="subtitulo">Mis Datos de Cuenta</h2>
+          <div className="box-info">
+            {status === 'loading' ? (
+              <p>Cargando datos de cuenta...</p>
+            ) : (
+              <div>
+                <p><strong>Nombre:</strong> {clientSession?.user?.name || 'No disponible'}</p>
+                <p><strong>Email:</strong> {clientSession?.user?.email || 'No disponible'}</p>
+                <p><strong>Ciudad:</strong> {userCity?.ciudad || 'Cargando...'}</p>
+              </div>
+            )}
 
-      <h2 className="subtitulo">Mis Datos de Cuenta</h2>
-
-      <div className="box-info">
-        {status === 'loading' ? (
-          <p>Cargando datos de cuenta...</p>
-        ) : (
-          <div>
-            <p><strong>Nombre:</strong> {clientSession?.user?.name || 'No disponible'}</p>
-            <p><strong>Email:</strong> {clientSession?.user?.email || 'No disponible'}</p>
-            <p><strong>Ciudad:</strong> {userCity?.ciudad || 'Cargando...'}</p>
-          </div>
-        )}
-
-        <div className="centereddiv">
-            <div className="button-container-item">
+            <div className="centereddiv">
+                <div className="button-container-item">
               <StandarButton text="Cambiar nombre de la cuenta" onClick={() => setIsEditing(true)}/>
             </div>
             <div className="button-container-item">
               <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
             </div>
-        </div>
-
-        {isEditing && (
-          <div>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              placeholder="Nuevo nombre"
-            />
-            <button onClick={handleNameChange}>Guardar</button>
-            <button onClick={() => setIsEditing(false)}>Cancelar</button>
           </div>
-        )}
+            </div>
+        </div>
       </div>
     </>
   );

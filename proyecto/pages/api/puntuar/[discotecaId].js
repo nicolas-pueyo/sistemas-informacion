@@ -97,7 +97,7 @@ export default async function handler(req, res) {
       console.error('Error al guardar la puntuación:', error);
       return res.status(500).json({ message: 'Error del servidor' });
     } finally {
-      await prisma.$disconnect;
+      await prisma.$disconnect();
     }
   } else {
     res.setHeader('Allow', ['POST']);

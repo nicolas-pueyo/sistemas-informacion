@@ -63,39 +63,46 @@ export default function Entradas() {
                 <title>Nébula - Entradas</title>
             </Head>
             <NavBar />
-            <h2 className="subtitulo">Mis entradas</h2>
-            <div className="box-info">
-                <div className="container">
-                    <div className="button-container">
-                        <div className="fetch-section">
-                            {loadingEntradas ? (
-                                <p>Cargando entradas...</p> )
-                                : entradas.length > 0 ? (
-                                    <>
-                                    <ul>
-                                    {entradas.map((entrada) => (
-                                    <EntradaUser 
+            <div className="gradient-background">
+              <div className="container">
+                <h2 className="subtitulo">Mis entradas</h2>
+                <div className="box-info">
+                    <div className="container">
+                        <div className="button-container">
+                            <div className="fetch-section">
+                                {loadingEntradas ? (
+                                    <p>Cargando entradas...</p> )
+                                    : entradas.length > 0 ? (
+                                        <>
+                                        <ul>
+                                        {entradas.map((entrada) => (
+                                       <EntradaUser 
                                       key={`${entrada.evento}-${entrada.fecha}-${entrada.entrada}-${entrada.ciudad}`}
                                       entrada={entrada.entrada} 
                                       evento={entrada.evento}
-                                      fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
-                                      discoteca={entrada.discoteca} 
+                                         fecha={new Date(entrada.fecha).toISOString().slice(0, 10).split('-').reverse().join('-')} 
+                                         discoteca={entrada.discoteca} 
                                       ciudad={entrada.ciudad}
-                                      seguroDev={entrada.seguro_devolucion} 
+                                         seguroDev={entrada.seguro_devolucion} 
                                       nEntradas={entrada.n_entradas}
                                         />
-                                    ))}
-                                        </ul>
-                                    </>
-                                )
-                                : <p>No tienes ninguna entrada.</p>
-                            }
+                                        ))}
+                                            </ul>
+                                        </>
+                                    )
+                                    : <>
+                                      <img src='/img/rengar.png' /> 
+                                      <p>Vaya...parece que no tienes ninguna entrada.</p>
+                                      </>
+                                }
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                      <div>
                     </div>
-                </div>
-            </div>
-            <div>
-            </div>
+                  </div>
+              </div>
         </>
     )
 }

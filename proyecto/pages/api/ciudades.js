@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       console.error('Error fetching cities:', error);
       res.status(500).json({ message: 'Error fetching cities' });
     } finally {
-      await prisma.$disconnect;
+      await prisma.$disconnect();
     }
   } else {
     res.setHeader('Allow', ['GET']);
