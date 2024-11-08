@@ -55,7 +55,7 @@ export default function Home({}) {
   const fetchDiscotecas = async (email) => {
     try {
       setLoadingDiscotecas(true); // Start loading discotecas
-      const res = await fetch(`/api/discotecas/gestor/${email}`);
+      const res = await fetch(`/api/discotecas/${email}`);
       const data = await res.json();
       setDiscotecas(data); // Set the discotecas once fetched
     } catch (error) {

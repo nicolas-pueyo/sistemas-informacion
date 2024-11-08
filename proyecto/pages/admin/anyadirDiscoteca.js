@@ -1,5 +1,5 @@
 // pages/addDiscoteca.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 
@@ -25,16 +25,31 @@ export default function AddDiscoteca() {
   const [nombre, setNombre] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [aforo, setAforo] = useState('');
-  const [calificacion, setCalificacion] = useState('0');
+  const [cities, setCities] = useState([]);
   const router = useRouter();
   const { data: clientSession } = useSession();
   const session = clientSession; // Prefer client-side session if available, fallback to server-side session
+
+  useEffect(() => {
+    async function fetchCities() {
+      try {
+        const res = await fetch('/api/ciudades');
+        const data = await res.json();
+        setCities(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+        setCities([]);
+      }
+    }
+    fetchCities();
+  }, []);
 
   const handleSubmit = async (e) => { // NON FUNCTIONAL, TODO -> hacer que realmente ahaña discoteca
     e.preventDefault();
 
     try {
-      const res = await fetch('/api/discoteca/gestor/anyadirDiscoteca', {
+      
+      const res = await fetch('/api/discotecas/gestor/anyadirDiscoteca', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,16 +103,14 @@ return (
             style={{ width: '100%', padding: '8px' }}
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Ciudad:</label>
-          <input
-            type="text"
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
+        <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
+          <option value="">Select city</option>
+          {cities.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
         <div style={{ marginBottom: '15px' }}>
           <label>Aforo:</label>
           <input
