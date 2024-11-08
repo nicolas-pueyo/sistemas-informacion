@@ -16,7 +16,6 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: 'No autenticado' });
     }
     const correo_usuario = session.user.email;
-    const nombre_usuario = session.user.nombre;
 
     const { ciudad, rating } = req.body;
 
@@ -31,8 +30,7 @@ export default async function handler(req, res) {
           discoteca_ciudad_nombre_usuario: {
             discoteca: discotecaId,
             ciudad: ciudad,
-            correo_usuario: correo_usuario,
-            nombre_usuario: nombre_usuario
+            nombre_usuario: correo_usuario //...
           },
         },
       });
@@ -41,10 +39,10 @@ export default async function handler(req, res) {
         // Actualizar la puntuación existente
         await prisma.puntua.update({
           where: {
-            discoteca_ciudad_correo_usuario: {
+            discoteca_ciudad_nombre_usuario: {
               discoteca: discotecaId,
               ciudad: ciudad,
-              correo_usuario: correo_usuario,
+              nombre_usuario: correo_usuario,
             },
           },
           data: {
@@ -57,7 +55,7 @@ export default async function handler(req, res) {
           data: {
             discoteca: discotecaId,
             ciudad: ciudad,
-            correo_usuario: correo_usuario,
+            nombre_usuario: correo_usuario,
             calificacion: rating,
           },
         });
@@ -92,7 +90,9 @@ export default async function handler(req, res) {
         },
       });
 
-      return res.status(200).json({ message: 'Puntuación guardada correctamente' });
+      return res.status(200).json({ message: 'Puntuación guardada correctamente', 
+                                    updatedRating: averageRating
+       });
     } catch (error) {
       console.error('Error al guardar la puntuación:', error);
       return res.status(500).json({ message: 'Error del servidor' });
