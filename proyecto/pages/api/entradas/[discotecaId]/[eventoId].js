@@ -14,9 +14,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        console.log("Evento ID:", eventoId);
-        console.log("Discoteca ID:", discotecaId);
-
         // Obtener todas las entradas relacionadas con el evento y la discoteca
         const tipoEntradas = await prisma.tipoentrada.findMany({
             where: {

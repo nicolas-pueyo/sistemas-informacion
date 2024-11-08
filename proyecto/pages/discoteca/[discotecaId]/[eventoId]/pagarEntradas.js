@@ -8,10 +8,13 @@ const PagarEntradasPage = () => {
   const { fileName } = router.query;
 
   return (
-    <div>
-      <h1>Finalizar Compra</h1>
-      {/* Pass the fileName to EntradaQRCode */}
-      <EntradaQRCode fileName={fileName} />
+    <div className="pagar-entradas-container">
+      <h1 className="subtitulo">Finalizar Compra</h1>
+      <div className="box-info">
+        <p className="centereddiv">
+        <EntradaQRCode fileName={fileName} />
+        </p>
+      </div>
     </div>
   );
 };

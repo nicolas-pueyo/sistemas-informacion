@@ -46,11 +46,14 @@ const EntradaQRCode = ({ usuario, discotecaId, eventoId, fecha }) => {
   return (
     <div>
       <h3>Escanea este QR para acceder a tu entrada:</h3>
+      <p className="centereddiv">
       {qrCodeDataUrl ? (
         <img src={qrCodeDataUrl} alt="QR Code de entrada" />
       ) : (
         <p>Error al generar el QR code.</p>
       )}
+      </p>
+      
     </div>
   );
 };
