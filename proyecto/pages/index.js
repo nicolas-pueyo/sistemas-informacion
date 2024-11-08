@@ -5,11 +5,13 @@ import NavBar from '../components/NavBar';
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
-  
+
+    const redirectPath = session?.user?.tipo === 'User' ? '/home' : '/admin/admin';
+
     if (session) {
       return {
         redirect: {
-          destination: '/home',  // Redirect to home if session is active
+          destination: redirectPath,  // Redirect to home if session is active
           permanent: false,
         },
       };

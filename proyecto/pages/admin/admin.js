@@ -1,7 +1,7 @@
 import Link from 'next/link'; // no tiene, tendrá eventualmente cuando añadamos discotecas
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import RatingBox from '../../components/RatingBox';
+import RatingBoxAdmin from '../../components/RatingBoxAdmin';
 import NavBar from '../../components/NavBar';
 import { getSession, useSession } from 'next-auth/react';
 import StandarButton from '../../components/StandarButton';
@@ -28,15 +28,17 @@ export async function getServerSideProps(context) {
 
 
 export default function Home({}) {
-  const { userCity } = useCityContext(); // Access selected city from context
+  const { userCity } = useCityContext();
   const { data: clientSession, status } = useSession();
-  const session = clientSession; // Prefer client-side session if available, fallback to server-side session
+  const session = clientSession;
   const [discotecas, setDiscotecas] = useState([]);
   const [city, setCity] = useState(null); // City of the logged-in user
+  const [discotecasConCiudad, setDiscotecasConCiudad] = useState([]);
   const [loadingCity, setLoadingCity] = useState(true); // Loading state for city fetch
-  const [loadingDiscotecas, setLoadingDiscotecas] = useState(false); // Loading state for discotecas
+  const [loadingDiscotecas, setLoadingDiscotecas] = useState(true); // Loading state for discotecas
 
 
+  
   const fetchCiudad = async (email) => {
     try {
       const res = await fetch(`/api/returnciudad/${email}`);  // Fetch user city by email
@@ -49,21 +51,32 @@ export default function Home({}) {
     }
   };
 
-  
 
-  // Fetch discotecas from the API when the user's city is available
   const fetchDiscotecas = async (email) => {
     try {
-      setLoadingDiscotecas(true); // Start loading discotecas
-      const res = await fetch(`/api/discotecas/${email}`);
+      console.log("Fetching discotecas for email:", email);
+      const res = await fetch(`/api/discotecas/gestor/${email}`);
       const data = await res.json();
-      setDiscotecas(data); // Set the discotecas once fetched
+      if (res.ok) {
+        console.log("Discotecas fetched:", data);
+        // Transformar los datos para incluir la ciudad
+        const discotecasTransformadas = data.map(discoteca => ({
+          nombre: discoteca.nombre,
+          ciudad: discoteca.ciudad,
+          calificacion: discoteca.calificacion // Asegúrate de incluir la calificación
+        }));
+        setDiscotecasConCiudad(discotecasTransformadas);
+        //setDiscotecas(data);
+      } else {
+        console.error("Error fetching discotecas:", data.error);
+      }
     } catch (error) {
-      console.error('Error fetching discotecas:', error);
+      console.error("Error fetching discotecas:", error);
     } finally {
-      setLoadingDiscotecas(false); // Finished fetching discotecas
+      setLoadingDiscotecas(false);
     }
   };
+
 
   useEffect(() => {
     if (session) {
@@ -75,18 +88,15 @@ export default function Home({}) {
     }
   }, [session]);
 
-  // UseEffect to fetch discotecas when the city is available
   useEffect(() => {
-    if (city && !loadingCity) {
-      fetchDiscotecas(city); // Fetch discotecas once the city is fetched
+    if (session) {
+      console.log("Session detected:", session);  // Verifica si la sesión existe
+      fetchDiscotecas(session.user.email)
+      //fetchUsuario(session.user.email);  // Usa el email de la sesión
+    } else {
+      console.log("No session detected");  // Verifica si no hay sesión
     }
-  }, [city, loadingCity]); // Re-fetch when the city is set and city loading is finished
-
-  useEffect(() => {
-    if (userCity) {
-      fetchDiscotecas(userCity); // Fetch discotecas based on the current userCity
-    }
-  }, [userCity]); // Re-fetch discotecas whenever userCity changes
+  }, [session]);
 
   
   if (session?.user.tipo !== 'Admin') {
@@ -121,26 +131,26 @@ export default function Home({}) {
         <div className="box-info">
           <div className="container">
             <div className="button-container">
-            <div className="fetch-section">
-            {loadingCity ? (
-                  <p>Loading city...</p> // Display loading state for city
-                ) : loadingDiscotecas ? (
-                  <p>Loading discotecas...</p> // Display loading state for discotecas
-                ) : discotecas.length > 0 ? (
-                  <>
-                  console.log(discotecas)
+              <div className="fetch-section">
+                {loadingDiscotecas ? (
+                  <p>Loading discotecas...</p>
+                ) : discotecasConCiudad.length > 0 ? (
                   <ul className="scrollable-list">
-                    {discotecas.map((discoteca) => (
+                    {discotecasConCiudad.map((discoteca) => (
                       <li key={discoteca.nombre}>
-                        <RatingBox name={discoteca.nombre} rating={discoteca.calificacion} discoteca={discoteca.nombre} city={city} />
+                        <RatingBoxAdmin
+                          name={discoteca.nombre}
+                          rating={discoteca.calificacion}
+                          discoteca={discoteca.nombre}
+                          city={discoteca.ciudad}
+                        />
                       </li>
                     ))}
                   </ul>
-                  </>
                 ) : (
-                  <p>No gestionas ninguna discoteca en {city}.</p>
+                  <p>No gestionas ninguna discoteca.</p>
                 )}
-            </div>
+              </div>
             </div>
           </div>
         </div>
