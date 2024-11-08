@@ -4,13 +4,16 @@ const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, name, city, capacity} = req.query; 
+    const { email, name, city, capacity} = req.body; 
     try {
+
       // Query the database, filter by city
       const existingDiscoteca = await prisma.discoteca.findUnique({
         where: {
-          nombre: name,
-          ciudad: city 
+          nombre_ciudad: {
+            nombre: name,
+            ciudad: city,
+          },
         },
       });
 
@@ -26,7 +29,7 @@ export default async function handler(req, res) {
           gestor: email,
           calificacion: 0,
           n_reviews: 0,
-          aforo: capacity,
+          aforo: parseInt(capacity),
         },
       });
 

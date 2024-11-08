@@ -27,6 +27,8 @@ const Account = () => {
   const { data: clientSession, status } = useSession();
 
   const [userCity, setUserCity] = useState(null);
+  const [newName, setNewName] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   const fetchCiudad = async (email) => {
 
@@ -54,6 +56,24 @@ const Account = () => {
     }
   }, [status, clientSession]);
 
+  const handleNameChange = async () => {
+    try {
+      const response = await fetch('/api/changeName', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: clientSession.user.email, newName }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update name');
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating name:', error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -78,9 +98,14 @@ const Account = () => {
             )}
 
             <div className="centereddiv">
+                <div className="button-container-item">
+              <StandarButton text="Cambiar nombre de la cuenta" onClick={() => setIsEditing(true)}/>
+            </div>
+            <div className="button-container-item">
               <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
             </div>
           </div>
+            </div>
         </div>
       </div>
     </>

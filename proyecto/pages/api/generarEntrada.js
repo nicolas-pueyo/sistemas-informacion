@@ -68,24 +68,84 @@ export default async function handler(req, res) {
       
       // Create entries in the database for each selected ticket
       for (const entrada of entradas) {
-        if (counts[entrada.id] > 0) { // Only process entries with count > 0
-          for (let i = 0; i < counts[entrada.id]; i++) { // Create an entry for each count
-            await prisma.posee.create({
+        if (counts[entrada.id] > 0) {
+          const existingWithInsurance = await prisma.posee.findFirst({
+            where: {
+              entrada: entrada.nombre,
+              evento: eventoId,
+              discoteca: discotecaId,
+              ciudad: entrada.ciudad,
+              fecha: entrada.fecha,
+              correo_usuario: userEmail,
+              seguro_devolucion: true,
+            },
+          });
+
+          if (existingWithInsurance) {
+            // Update the existing entry with insurance
+            await prisma.posee.update({
+              where: {
+                entrada_evento_discoteca_ciudad_fecha_correo_usuario: {
+                  entrada: entrada.nombre,
+                  evento: eventoId,
+                  discoteca: discotecaId,
+                  ciudad: entrada.ciudad,
+                  fecha: entrada.fecha,
+                  correo_usuario: userEmail,
+                },
+              },
               data: {
+                n_entradas: existingWithInsurance.n_entradas + counts[entrada.id],
+              },
+            });
+          } else {
+            // Check for an entry without insurance
+            const existingWithoutInsurance = await prisma.posee.findFirst({
+              where: {
                 entrada: entrada.nombre,
                 evento: eventoId,
                 discoteca: discotecaId,
-                ciudad: entrada.ciudad, // Make sure you have the ciudad information
-                fecha: currentDate,
+                ciudad: entrada.ciudad,
+                fecha: entrada.fecha,
                 correo_usuario: userEmail,
-                seguro_devolucion: seguros[entrada.id] || false,
-                tipoentrada: {
-                  connect: {
-                    id: entrada.evento // Ensure this ID is correct and exists in your database
-                  }
-                }
-              }
+                seguro_devolucion: false,
+              },
             });
+
+            if (existingWithoutInsurance) {
+              // Do not modify the entry without insurance
+              // Optionally, log or handle this case if needed
+            } else {
+              // Create a new entry with insurance
+              await prisma.posee.create({
+                data: {
+                  entrada: entrada.nombre,
+                  evento: eventoId,
+                  discoteca: discotecaId,
+                  ciudad: entrada.ciudad,
+                  fecha: entrada.fecha,
+                  correo_usuario: userEmail,
+                  seguro_devolucion: true,
+                  n_entradas: counts[entrada.id],
+                  tipoentrada: {
+                    connect: {
+                      nombre_evento_discoteca_ciudad_fecha: {
+                        nombre: entrada.nombre,
+                        evento: eventoId,
+                        discoteca: discotecaId,
+                        ciudad: entrada.ciudad,
+                        fecha: entrada.fecha,
+                      },
+                    },
+                  },
+                  usuario: {
+                    connect: {
+                      correo: userEmail,
+                    },
+                  },
+                },
+              });
+            }
           }
         }
       }

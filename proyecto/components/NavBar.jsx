@@ -29,10 +29,13 @@ const NavBar = () => {
     }
   };
 
+    // Determinar la ruta de redirección según el tipo de usuario
+    const redirectPath = session.user.tipo === 'User' ? '/home' : '/admin/admin';
+
   return (
     <div className="home">
       <div className="left">
-        <Link href="/home" className="home-icon">
+        <Link href={redirectPath} className="home-icon">
           <img className="pres-logo" src="/img/logo-trans.png" alt="Logo" />
         </Link>
       </div>

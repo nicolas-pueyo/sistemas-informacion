@@ -21,8 +21,9 @@ const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
   };
   
   const handleSeguroChange = (e) => {
-    setHasSeguro(e.target.checked);
-    onCountChange(entradaId, count, e.target.checked);
+    const isChecked = e.target.checked;
+    setHasSeguro(isChecked);
+    onCountChange(entradaId, count, isChecked);
   };
 
 
