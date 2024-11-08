@@ -15,7 +15,7 @@ export default function Signup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Estado para el rol seleccionado
-  const [rol, setRol] = useState('');
+  const [rol, setRol] = useState('User');
 
   useEffect(() => {
     async function fetchCities() {
@@ -82,9 +82,14 @@ export default function Signup() {
   };
 
   // Función para seleccionar el rol
-  const handleRoleSelect = (selectedRole) => {
-    setRol((prevRole) => (prevRole === selectedRole ? '' : selectedRole));
+  const handleRoleSelect = () => {
+    setRol((prevRole) => {
+      if (prevRole === "User") return "Admin";
+      if (prevRole === "Admin") return "User";
+      return "User"; // Si no hay nada seleccionado, establece "User" por defecto
+    });
   };
+  
 
   return (
     <>
@@ -137,19 +142,7 @@ export default function Signup() {
             <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
               <button
                 type="button"
-                onClick={() => handleRoleSelect('User')}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: rol === 'User' ? '#4CAF50' : '#f0f0f0',
-                  color: rol === 'User' ? 'white' : 'black',
-                  border: '1px solid #ccc',
-                }}
-              >
-                Usuario
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRoleSelect('Admin')}
+                onClick={() => handleRoleSelect()}
                 style={{
                   padding: '10px 20px',
                   backgroundColor: rol === 'Admin' ? '#4CAF50' : '#f0f0f0',
