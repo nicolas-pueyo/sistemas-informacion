@@ -69,7 +69,7 @@ export default function Signup() {
           router.push('/home');
         }
         else {
-          router.push('/adminniga/adminiga');
+          router.push('/admin/admin');
         }
       } else {
         setError(signInRes.error || 'Error durante el inicio de sesión');
