@@ -112,11 +112,11 @@ export default function Home({}) {
           <title>Nébula Admin</title>
         </Head>
         <NavBar/>
-        <Link href="anyadirDiscoteca">
-          <div className='centereddiv'>      
-            <StandarButton text="AÑADIR UNA DISCOTECA"/>
+          <div className='centereddiv'> 
+            <Link href="anyadirDiscoteca">     
+              <StandarButton text="AÑADIR UNA DISCOTECA"/>
+              </Link>
           </div>
-        </Link>
         <h2 className="subtitulo">Mis discotecas</h2>
         <div className="box-info">
           <div className="container">
