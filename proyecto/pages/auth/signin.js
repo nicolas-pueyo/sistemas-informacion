@@ -29,7 +29,7 @@ export default function SignIn() {
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
       if (session.user.tipo === 'Admin') {
-        router.push('/adminniga/adminiga'); // Redirige a la página de administrador
+        router.push('/admin/admin'); // Redirige a la página de administrador
       } else {
         router.push('/home'); // Redirige a la página de usuario regular
       }

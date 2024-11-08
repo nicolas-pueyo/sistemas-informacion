@@ -25,7 +25,7 @@ export default function AddDiscoteca() {
   const [nombre, setNombre] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [aforo, setAforo] = useState('');
-  const [calificacion, setCalificacion] = useState('');
+  const [calificacion, setCalificacion] = useState('0');
   const router = useRouter();
   const { data: clientSession } = useSession();
   const session = clientSession; // Prefer client-side session if available, fallback to server-side session
@@ -33,24 +33,23 @@ export default function AddDiscoteca() {
   const handleSubmit = async (e) => { // NON FUNCTIONAL, TODO -> hacer que realmente ahaña discoteca
     e.preventDefault();
 
-    const discotecaData = {
-      nombre,
-      ciudad,
-      aforo: parseInt(aforo, 10),
-    };
-
     try {
-      const res = await fetch('/api/discoteca', {
+      const res = await fetch('/api/discoteca/gestor/anyadirDiscoteca', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(discotecaData),
+        body: JSON.stringify({
+          email: session.user.email,
+          name: nombre,
+          city: ciudad,
+          capacity: aforo,
+        }),
       });
 
       if (res.ok) {
         alert('Discoteca añadida exitosamente');
-        router.push('/'); // Redirige a la página principal o a una lista de discotecas
+        router.push('/admin/admin'); // Redirige a la página principal o a una lista de discotecas
       } else {
         alert('Error al añadir la discoteca');
       }
@@ -73,7 +72,7 @@ export default function AddDiscoteca() {
         <p>No tienes acceso a esta página</p>
       </> 
     )
-} 
+  } 
 
 return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
