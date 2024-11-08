@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 
 const RatingBox = ({ name, rating, discoteca, city }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [currentRating, setCurrentRating] = useState(rating);
+
+  useEffect(() => {
+    setCurrentRating(rating);
+  }, [rating]); // inicialmente, cambiamos el rating al que me da el usuario. luego, lo modificaremos por el nuevo calculado
 
   const handleCardClick = () => {
     router.push(`/discoteca/${discoteca}`);
@@ -34,7 +39,9 @@ const RatingBox = ({ name, rating, discoteca, city }) => {
         }),
       });
       if (response.ok) {
+        const data = await response.json();
         console.log(`Puntuación enviada: ${star} estrellas`);
+        setCurrentRating(data.updatedRating); // Actualiza la puntuación promedio desde la respuesta
         setShowModal(false);
       } else {
         console.error('Error al guardar la puntuación');
@@ -66,7 +73,7 @@ const RatingBox = ({ name, rating, discoteca, city }) => {
       <div className="card" onClick={handleCardClick}>
         <div className="content">
           <p className="heading">{name}</p>
-          <p className="rating" onClick={handleRatingClick}>{rating}</p>
+          <p className="rating" onClick={handleRatingClick}>{currentRating}</p>
         </div>
       </div>
       {showModal && <RatingModal />}
