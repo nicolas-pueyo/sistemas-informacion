@@ -47,7 +47,7 @@ export default function Signup() {
           password: contrase_a,
           username: usuario,
           city: ciudad,
-          role: rol, // Añadimos el rol al cuerpo de la solicitud
+          role: rol,
         }),
       });
 
