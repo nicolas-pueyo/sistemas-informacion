@@ -35,16 +35,12 @@ const Inicio = () => {
 
             <div className="body">
                 <Link href="/auth/signin">
-                    <button className="login" role="button">Iniciar sesión</button>
+                    <button className="landing-button" role="button"><strong>¿YA TIENES CUENTA? INICIA SESIÓN</strong></button>
                 </Link>
                 <Link href="/auth/signup">
-                    <button className="register" role="button">Registrarse</button>
+                    <button className="landing-button" role="button"><strong>REGISTRATE</strong></button>
                 </Link>
-            
             </div>
-
-
-
         </>
     );
 };

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getSession, useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import NavBar from '../components/NavBar';
+import StandarButton from '../components/StandarButton';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -77,8 +78,8 @@ const Account = () => {
           </div>
         )}
 
-        <div>
-          <button onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</button>
+        <div className="centereddiv">
+          <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
         </div>
       </div>
     </>
