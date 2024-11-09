@@ -373,7 +373,7 @@ ul {
 
 .standard-button {
   display:block;
-  margin: auto;
+  margin: 5%;
   padding: 10px 20px;
   font-size: 3dvh;; /* Same size as .heading */
   font-weight: 700; /* Same font weight as .heading */

@@ -96,7 +96,7 @@ export default function Home() {
       <div className="gradient-background">
         <div className="container">
           <div className="centereddiv">
-            <Link href="/anyadirDiscoteca">
+            <Link href="/admin/anyadirDiscoteca">
               <StandarButton text="AÑADIR UNA DISCOTECA" />
             </Link>
           </div>
