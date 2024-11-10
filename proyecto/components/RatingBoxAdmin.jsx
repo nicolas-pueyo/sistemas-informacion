@@ -12,7 +12,7 @@ const RatingBoxAdmin = ({ name, rating, discoteca, city }) => {
   }, [rating]); // inicialmente, cambiamos el rating al que me da el usuario. luego, lo modificaremos por el nuevo calculado
 
   const handleCardClick = () => {
-    router.push(`/discoteca/${discoteca}`);
+    router.push(`/admin/discoteca/${city}/${discoteca}`);
   };
 
   const handleRatingClick = (e) => {
@@ -22,7 +22,7 @@ const RatingBoxAdmin = ({ name, rating, discoteca, city }) => {
 
 
   const handleDatos = () => {
-    router.push('/admin/admin'); // Redirige a la página principal o a una lista de discotecas;
+    router.push(`/admin/verDatos/${city}/${discoteca}`);
   };
   
   const closeModal = () => {

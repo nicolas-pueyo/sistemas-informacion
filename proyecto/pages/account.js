@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession, useSession, update } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import NavBar from '../components/NavBar';
 import StandarButton from '../components/StandarButton';
+
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -22,13 +23,43 @@ export async function getServerSideProps(context) {
   };
 }
 
+  // Componente del modal
+  const EditModal = ({ usuario, setUsuario, handleNameChange, isSubmitting, closeModal }) => (
+    <div className="modal-overlay" onClick={closeModal}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Cambiar nombre</h2>
+        <form onSubmit={handleNameChange}>
+          <div>
+            <div style={{ marginBottom: '15px' }}>
+              <input
+                type="text"
+                placeholder="Nombre de Usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                required
+                style={{ padding: '10px', width: '100%' }}
+              />
+            </div>
+          </div>
+          
+          {/* Botón de confirmación */}
+          <button className="landing-button" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? '...' : 'Confirmar cambios'}
+          </button>
+        </form>
+        <button onClick={closeModal}>Cerrar</button>
+      </div>
+    </div>
+  );
+
 const Account = () => {
 
   const { data: clientSession, status } = useSession();
 
   const [userCity, setUserCity] = useState(null);
-  const [newName, setNewName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [usuario, setUsuario] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchCiudad = async (email) => {
 
@@ -56,36 +87,60 @@ const Account = () => {
     }
   }, [status, clientSession]);
 
-  const handleNameChange = async () => {
+
+
+  const handleNameChange = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+  
     try {
-      const response = await fetch('/api/changeName', {
+      const res = await fetch('/api/changeName', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: clientSession.user.email, newName }),
+        body: JSON.stringify(requestBody),
       });
-
-      if (!response.ok) throw new Error('Failed to update name');
-
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error updating name:', error);
+  
+      if (!res.ok) {
+        throw new Error('Error durante el cambio de nombre');
+      } else {
+        console.log("Nombre cambiado con éxito");
+  
+        // Forzar la actualización de la sesión
+        const updatedSession = await getSession();
+        console.log('Sesión actualizada:', updatedSession);
+  
+        signOut({ callbackUrl: '/' });
+      }
+    } catch (err) {
+      console.error('Error al cambiar el nombre:', err);
     }
+  
+    setIsSubmitting(false);
   };
+  
+
+  const closeModal = () => {
+    setIsEditing(false);
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+
+
 
   return (
     <>
       <Head>
-        <meta charSet="utf-8" />
-        <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Nébula - Account</title>
       </Head>
       <NavBar />
       <div className="gradient-background">
         <div className="container">
-        <h2 className="subtitulo">Mis Datos de Cuenta</h2>
+          <h2 className="subtitulo">Mis Datos de Cuenta</h2>
           <div className="box-info">
             {status === 'loading' ? (
               <p>Cargando datos de cuenta...</p>
@@ -98,16 +153,21 @@ const Account = () => {
             )}
 
             <div className="centereddiv">
-                <div className="button-container-item">
-              <StandarButton text="Cambiar nombre de la cuenta" onClick={() => setIsEditing(true)}/>
-            </div>
-            <div className="button-container-item">
-              <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/'})} />
+              <StandarButton text="Cambiar nombre de la cuenta" onClick={handleEdit} />
+              <StandarButton text="Cerrar sesión" onClick={() => signOut({ callbackUrl: '/' })} />
             </div>
           </div>
-            </div>
         </div>
       </div>
+      {isEditing && (
+        <EditModal
+          usuario={usuario}
+          setUsuario={setUsuario}
+          handleNameChange={handleNameChange}
+          isSubmitting={isSubmitting}
+          closeModal={closeModal}
+        />
+      )}
     </>
   );
 };
