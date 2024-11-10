@@ -373,7 +373,7 @@ ul {
 
 .standard-button {
   display:block;
-  margin: auto;
+  margin: 5%;
   padding: 10px 20px;
   font-size: 3dvh;; /* Same size as .heading */
   font-weight: 700; /* Same font weight as .heading */
@@ -573,7 +573,7 @@ ul {
 .container {
   width: 100%;
   text-align: center;
-  margin: auto;
+  margin-top: 5%;
   flex-grow: 1; /* Permite que el contenedor crezca hacia abajo */
   overflow-y: auto; /* Añade un scroll si el contenido es demasiado alto */
   padding-bottom: 50px;
