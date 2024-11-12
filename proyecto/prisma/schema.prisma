@@ -46,12 +46,12 @@ model posee {
   ciudad            String      @db.VarChar(100)
   fecha             DateTime    @db.Date
   correo_usuario    String      @db.VarChar(100)
-  seguro_devolucion Boolean?
+  seguro_devolucion Boolean     @db.Boolean
   n_entradas        Int
   tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: Cascade, onUpdate: Cascade)
   usuario           usuario     @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([entrada, evento, discoteca, ciudad, fecha, correo_usuario])
+  @@id([entrada, evento, discoteca, ciudad, fecha, correo_usuario, seguro_devolucion])
 }
 
 model tipoentrada {
