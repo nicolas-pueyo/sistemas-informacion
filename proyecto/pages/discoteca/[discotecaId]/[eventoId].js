@@ -16,6 +16,7 @@ export default function EventoDetail() {
   const [entradas, setEntradas] = useState([]);
   const [counts, setCounts] = useState({});
   const [seguros, setSeguros] = useState({});
+  const [availableTickets, setAvailableTickets] = useState({});
   
 
   const fetchEntradas = async (eventoId, discotecaId) => {
@@ -26,6 +27,14 @@ export default function EventoDetail() {
       }
       const data = await res.json();
       setEntradas(data);
+      
+      // Create a map of available tickets
+      const ticketsMap = {};
+      data.forEach(entrada => {
+        ticketsMap[entrada.nombre] = entrada.n_existencias;
+      });
+      setAvailableTickets(ticketsMap);
+      
       setLoadingEntradas(false);
     } catch (error) {
       console.error('Error fetching entradas:', error);
@@ -40,6 +49,12 @@ export default function EventoDetail() {
   }, [router.isReady, eventoId]);
 
   const handleCountChange = (id, count, hasSeguro) => {
+    // Check if requested count exceeds available tickets
+    if (count > availableTickets[id]) {
+      alert(`Solo quedan ${availableTickets[id]} entradas disponibles`);
+      return;
+    }
+
     setCounts(prev => ({
       ...prev,
       [id]: count
@@ -146,10 +161,12 @@ export default function EventoDetail() {
                       {entradas.map((entrada) => (
                         <li key={entrada.nombre}>
                           <EntryCounter
-                            entradaId={entrada.id}
+                            entradaId={entrada.nombre}
                             discoteca={discotecaId}
                             entradaName={entrada.nombre}
                             onCountChange={handleCountChange}
+                            maxTickets={availableTickets[entrada.id]}
+                            price={entrada.precio}
                           />
                         </li>
                       ))}
