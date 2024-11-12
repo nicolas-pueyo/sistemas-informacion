@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
   const [count, setCount] = useState(0);
   const [hasSeguro, setHasSeguro] = useState(false);
 
+  const updateParent = useCallback((newCount, newHasSeguro) => {
+    onCountChange(entradaId, newCount, newHasSeguro);
+  }, [entradaId, onCountChange]);
+
   const incrementCount = () => {
     setCount(prevCount => {
       const newCount = prevCount + 1;
-      if (onCountChange) onCountChange(newCount);
+      updateParent(newCount, hasSeguro);
       return newCount;
     });
   };
@@ -15,7 +19,7 @@ const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
   const decrementCount = () => {
     setCount(prevCount => {
       const newCount = prevCount > 0 ? prevCount - 1 : 0;
-      if (onCountChange) onCountChange(newCount);
+      updateParent(newCount, hasSeguro);
       return newCount;
     });
   };
@@ -23,9 +27,8 @@ const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
   const handleSeguroChange = (e) => {
     const isChecked = e.target.checked;
     setHasSeguro(isChecked);
-    onCountChange(entradaId, count, isChecked);
+    updateParent(count, isChecked);
   };
-
 
   return (
     <div className="card">
@@ -39,7 +42,7 @@ const EntryCounter = ({ entradaId, entradaName, onCountChange }) => {
             /> Seguro
         </div>
         <div className="counter-section">
-        <button className="arrow-button" onClick={incrementCount}>
+          <button className="arrow-button" onClick={incrementCount}>
             ▲
           </button>
           <span className="count-display">{count}</span>

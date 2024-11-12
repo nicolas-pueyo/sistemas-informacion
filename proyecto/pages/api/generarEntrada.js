@@ -107,17 +107,11 @@ export default async function handler(req, res) {
             });
           } else {
             console.log(`Creating new entry with ${counts[entrada.id]} tickets`);
-            // Crear nueva entrada
+            // Crear nueva entrada  
             await prisma.posee.create({
               data: {
-                entrada: entrada.nombre,
-                evento: eventoId,
-                discoteca: discotecaId,
-                ciudad: entrada.ciudad,
-                fecha: entrada.fecha,
-                correo_usuario: userEmail,
-                seguro_devolucion: hasSeguro,
                 n_entradas: counts[entrada.id],
+                // Connect to existing tipoentrada
                 tipoentrada: {
                   connect: {
                     nombre_evento_discoteca_ciudad_fecha: {
@@ -126,16 +120,20 @@ export default async function handler(req, res) {
                       discoteca: discotecaId,
                       ciudad: entrada.ciudad,
                       fecha: entrada.fecha,
+                      seguro_devolucion: hasSeguro,
                     }
                   }
                 },
+                // Connect to existing user
                 usuario: {
                   connect: {
                     correo: userEmail,
                   }
-                }
-              },
+                },
+                seguro_devolucion: hasSeguro,
+              }
             });
+
           }
         }
       }
