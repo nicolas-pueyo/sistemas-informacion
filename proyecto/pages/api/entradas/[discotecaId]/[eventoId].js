@@ -20,14 +20,29 @@ export default async function handler(req, res) {
                 evento: eventoId,
                 discoteca: discotecaId,
             },
+            select: {
+                nombre: true,
+                evento: true,
+                discoteca: true,
+                ciudad: true,
+                fecha: true,
+                n_existencias: true,
+                precio: true,
+            }
         });
 
+        // Map the data to include an id field
+        const mappedEntradas = tipoEntradas.map(entrada => ({
+            ...entrada,
+            id: entrada.nombre, // Using nombre as id since it's part of the primary key
+        }));
+
         // Verificar si existen entradas para el evento
-        if (!tipoEntradas || tipoEntradas.length === 0) {
+        if (!mappedEntradas || mappedEntradas.length === 0) {
             return res.status(404).json({ error: 'No se encontraron entradas para el evento y discoteca especificados.' });
         }
 
-        res.status(200).json(tipoEntradas);
+        res.status(200).json(mappedEntradas);
     } catch (error) {
         console.error('Error fetching tipoentradas:', error);
         res.status(500).json({ error: 'Error interno del servidor' });

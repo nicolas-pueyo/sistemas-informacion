@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import EntradaQRCode from '../../../../components/EntradaQRCode';
 import Head from 'next/head'
-import NavBar from '../../../components/NavBar'
+import NavBar from '../../../../components/NavBar'
 
 const PagarEntradasPage = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const PagarEntradasPage = () => {
             <h1 className="subtitulo">Finalizar Compra</h1>
             <div className="box-info">
               <p className="centereddiv">
-              <EntradaQRCode fileName={fileName} />
+                <EntradaQRCode fileName={fileName} />
               </p>
             </div>
           </div>
