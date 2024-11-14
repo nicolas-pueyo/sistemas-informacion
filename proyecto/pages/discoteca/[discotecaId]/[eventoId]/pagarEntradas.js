@@ -18,14 +18,18 @@ const PagarEntradasPage = () => {
 	      <title>Nébula</title>
       </Head>
       <NavBar />
-          <div className="pagar-entradas-container">
-            <h1 className="subtitulo">Finalizar Compra</h1>
-            <div className="box-info">
-              <p className="centereddiv">
-                <EntradaQRCode fileName={fileName} />
-              </p>
+        <div className="gradient-background">
+          <div className="container">
+            <div className="pagar-entradas-container">
+              <h1 className="subtitulo">Finalizar Compra</h1>
+              <div className="box-info">
+                <div className="centereddiv">
+                  <EntradaQRCode fileName={fileName} />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
     </>
   );
 };

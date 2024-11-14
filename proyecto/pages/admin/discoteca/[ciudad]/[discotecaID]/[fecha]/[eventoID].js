@@ -56,29 +56,28 @@ const fetchEntradas = async () => {
       </Head>
       <NavBar />
       <div className="gradient-background">
-      <Link href={`/admin/discoteca/${ciudad}/${discotecaID}/${fecha}/${eventoID}/anyadirEntrada`}>
-        <StandarButton text="AÑADIR UNA ENTRADA" />
-      </Link>
         <div className="container">
+          <div className="centereddiv">
+            <Link href={`/admin/discoteca/${ciudad}/${discotecaID}/${fecha}/${eventoID}/anyadirEntrada`}>
+              <StandarButton text="AÑADIR UNA ENTRADA" />
+            </Link>
+          </div>
           <h2 className="subtitulo">Entradas en {eventoID}</h2>
-
           <div className="box-info">
-            <div className="container">
-              <div className="fetch-section">
-                {loadingEntradas ? (
-                  <p>Cargando entradas...</p>
-                ) : entradas.length > 0 ? (
-                  <ul className="scrollable-list">
-                    {entradas.map((entrada) => (
-                      <li key={entrada.nombre}>
-                          <EntradaBoxAdmin entrada={entrada.nombre} evento={eventoID} fecha={fecha}  discoteca={discotecaID} city={ciudad} precio={entrada.precio} existencias={entrada.n_existencias}/>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No se encontraron entradas para {eventoID}.</p>
-                )}
-              </div>
+            <div className="fetch-section">
+              {loadingEntradas ? (
+                <p>Cargando entradas...</p>
+              ) : entradas.length > 0 ? (
+                <ul className="scrollable-list">
+                  {entradas.map((entrada) => (
+                    <li key={entrada.nombre}>
+                        <EntradaBoxAdmin entrada={entrada.nombre} evento={eventoID} fecha={fecha}  discoteca={discotecaID} city={ciudad} precio={entrada.precio} existencias={entrada.n_existencias}/>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No se encontraron entradas para {eventoID}.</p>
+              )}
             </div>
           </div>
         </div>

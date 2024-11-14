@@ -56,12 +56,13 @@ const fetchEvents = async () => {
       </Head>
       <NavBar />
       <div className="gradient-background">
-      <Link href={`/admin/discoteca/${ciudad}/${discotecaID}/anyadirEvento`}>
-        <StandarButton text="AÑADIR UN EVENTO" />
-      </Link>
         <div className="container">
+          <div className="centereddiv">
+            <Link href={`/admin/discoteca/${ciudad}/${discotecaID}/anyadirEvento`}>
+              <StandarButton text="AÑADIR UN EVENTO" />
+            </Link>
+          </div> 
           <h2 className="subtitulo">Eventos en {discotecaID}</h2>
-
           <div className="box-info">
             <div className="container">
               <div className="fetch-section">

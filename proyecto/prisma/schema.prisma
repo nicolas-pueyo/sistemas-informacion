@@ -33,7 +33,7 @@ model evento {
   discoteca                                                     String        @db.VarChar(100)
   ciudad                                                        String        @db.VarChar(100)
   fecha                                                         DateTime      @db.Date
-  discoteca_evento_discoteca_ciudadTodiscoteca                  discoteca     @relation("evento_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: Cascade, onUpdate: Cascade)
+  discoteca_evento_discoteca_ciudadTodiscoteca                  discoteca     @relation("evento_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: Cascade)
   tipoentrada_tipoentrada_evento_discoteca_ciudad_fechaToevento tipoentrada[] @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento")
 
   @@id([nombre, discoteca, ciudad, fecha])
@@ -45,11 +45,11 @@ model posee {
   discoteca         String      @db.VarChar(100)
   ciudad            String      @db.VarChar(100)
   fecha             DateTime    @db.Date
+  seguro_devolucion Boolean
   correo_usuario    String      @db.VarChar(100)
-  seguro_devolucion Boolean     @db.Boolean
   n_entradas        Int
-  tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: Cascade, onUpdate: Cascade)
   usuario           usuario     @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
+  tipoentrada       tipoentrada @relation(fields: [entrada, evento, discoteca, ciudad, fecha], references: [nombre, evento, discoteca, ciudad, fecha], onDelete: Cascade)
 
   @@id([entrada, evento, discoteca, ciudad, fecha, correo_usuario, seguro_devolucion])
 }
@@ -61,24 +61,21 @@ model tipoentrada {
   ciudad                                                   String   @db.VarChar(100)
   fecha                                                    DateTime @db.Date
   n_existencias                                            Int?
-  n_max_existencias                                        Int
   precio                                                   Decimal? @db.Decimal(10, 2)
+  n_max_existencias                                        Int
   posee                                                    posee[]
-  evento_tipoentrada_evento_discoteca_ciudad_fechaToevento evento   @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento", fields: [evento, discoteca, ciudad, fecha], references: [nombre, discoteca, ciudad, fecha], onDelete: Cascade, onUpdate: Cascade)
+  evento_tipoentrada_evento_discoteca_ciudad_fechaToevento evento   @relation("tipoentrada_evento_discoteca_ciudad_fechaToevento", fields: [evento, discoteca, ciudad, fecha], references: [nombre, discoteca, ciudad, fecha], onDelete: Cascade)
 
   @@id([nombre, evento, discoteca, ciudad, fecha])
 }
 
-
-
-
 model puntua {
   discoteca                                    String    @db.VarChar(100)
   ciudad                                       String    @db.VarChar(100)
-  correo_usuario                               String    @db.VarChar(100)
   calificacion                                 Decimal?  @db.Decimal(10, 2)
-  discoteca_puntua_discoteca_ciudadTodiscoteca discoteca @relation("puntua_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: Cascade, onUpdate: Cascade)
+  correo_usuario                               String    @db.VarChar(100)
   usuario                                      usuario   @relation(fields: [correo_usuario], references: [correo], onDelete: NoAction, onUpdate: NoAction)
+  discoteca_puntua_discoteca_ciudadTodiscoteca discoteca @relation("puntua_discoteca_ciudadTodiscoteca", fields: [discoteca, ciudad], references: [nombre, ciudad], onDelete: Cascade)
 
   @@id([discoteca, ciudad, correo_usuario])
 }

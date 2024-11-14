@@ -113,14 +113,16 @@ return (
                 style={{ width: '100%', padding: '8px' }}
               />
             </div>
-            <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
-              <option value="">Select city</option>
-                {cities.map((city) => (
-                <option key={city} value={city}>
-                {city}
-                </option>
-            ))}
-        </select>
+            <div className="centereddiv">
+              <select value={ciudad} onChange={(e) => setCiudad(e.target.value)} required>
+                <option value="">Select city</option>
+                  {cities.map((city) => (
+                  <option key={city} value={city}>
+                  {city}
+                  </option>
+              ))}
+              </select>
+            </div>
             <div style={{ marginBottom: '15px' }}>
               <label>Aforo:</label>
               <input

@@ -48,7 +48,7 @@ export default function SignIn() {
       <div className="gradient-background">
         <div className="container">
           <div style={{ textAlign: 'center', padding: '50px' }}>
-            <h1>Sign In</h1>
+            <h1>Iniciar sesión</h1>
             <form onSubmit={handleSubmit}>
               <div style={{ marginBottom: '15px' }}>
                 <input

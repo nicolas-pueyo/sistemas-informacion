@@ -94,42 +94,44 @@ return (
     <div className="gradient-background">
       <div className="container">
         <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-          <h1>Añadir Entrada</h1>
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '15px' }}>
-              <label>Nombre:</label>
-              <input
-                type="text"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-                style={{ width: '100%', padding: '8px' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label>Precio:</label>
-              <input
-                type="text"
-                value={precio}
-                onChange={(e) => setPrecio(e.target.value)}
-                required
-                style={{ width: '100%', padding: '8px' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label>Existencias:</label>
-              <input
-                type="text"
-                value={existencias}
-                onChange={(e) => setExistencias(e.target.value)}
-                required
-                style={{ width: '100%', padding: '8px' }}
-              />
-            </div>
-            <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>
-              Añadir Entrada
-            </button>
-          </form>
+          <div className="box-info">
+            <h1>Añadir Entrada</h1>
+            <form onSubmit={handleSubmit}>
+              <div style={{ marginBottom: '15px' }}>
+                <label>Nombre:</label>
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                  style={{ width: '100%', padding: '8px' }}
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label>Precio:</label>
+                <input
+                  type="text"
+                  value={precio}
+                  onChange={(e) => setPrecio(e.target.value)}
+                  required
+                  style={{ width: '100%', padding: '8px' }}
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label>Existencias:</label>
+                <input
+                  type="text"
+                  value={existencias}
+                  onChange={(e) => setExistencias(e.target.value)}
+                  required
+                  style={{ width: '100%', padding: '8px' }}
+                />
+              </div>
+              <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer' }}>
+                Añadir Entrada
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

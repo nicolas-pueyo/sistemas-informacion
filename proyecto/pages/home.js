@@ -101,14 +101,14 @@ export default function Home({}) {
       <NavBar />
       <div className="gradient-background">
         <div className="container">
-          <Link href="entradas">
-            <div className='centereddiv'>      
+          <div className='centereddiv'>
+            <Link href="entradas">      
               <StandarButton text="VER MIS ENTRADAS"/>
-            </div>
-          </Link>
-          <h2 className="subtitulo">Discotecas</h2>
+            </Link>
+            <h2 className="subtitulo">Discotecas</h2>
+          </div>
           <div className="box-info">
-              <div className="button-container">
+            <div className="button-container">
               <div className="fetch-section">
               {loadingCity ? (
                     <p>Loading city...</p> // Display loading state for city
@@ -116,7 +116,6 @@ export default function Home({}) {
                     <p>Loading discotecas...</p> // Display loading state for discotecas
                   ) : discotecas.length > 0 ? (
                     <>
-                    console.log(discotecas)
                     <ul className="scrollable-list">
                       {discotecas.map((discoteca) => (
                         <li key={discoteca.nombre}>
