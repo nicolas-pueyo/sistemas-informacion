@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '../../components/NavBar';
+import Head from 'next/head'
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -30,8 +31,15 @@ export default function ResetPassword() {
 
   return (
     <>
-        <NavBar/>
-        <div>
+      <Head>
+	      <meta charSet="utf-8" />
+	      <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+	      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	      <title>Nébula</title>
+      </Head>
+      <NavBar/>
+      <div className="gradient-background">
+        <div className="container">
           <h1>Reset Your Password</h1>
           <form onSubmit={handleSubmit}>
             <input
@@ -45,6 +53,7 @@ export default function ResetPassword() {
           </form>
           {message && <p>{message}</p>}
         </div>
+      </div>
     </>
   );
 }
